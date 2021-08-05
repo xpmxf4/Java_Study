@@ -9,10 +9,10 @@ public class ArrayEx10 {
         for (int i = 0; i < numArr.length; i++) {
             System.out.print(numArr[i] = (int) (Math.random() * 10));
         }
-        for (int i = 0; i < numArr.length-1; i++) {
+        for (int i = 0; i < numArr.length-1; i++) {             // 0 ~ 8
             boolean changed = false;
 
-            for (int j = 0; j < numArr.length - 1 - i; j++) {
+            for (int j = 0; j < numArr.length - 1 - i; j++) {   //
                 if (numArr[j] > numArr[j + 1]) {
                     int temp = numArr[j];
                     numArr[j] = numArr[j + 1];
