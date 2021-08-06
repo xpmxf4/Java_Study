@@ -10,6 +10,7 @@ public class ArrayEx5 {
         for (int i = 0; i < score.length; i++) {
             sum += score[i];
         }
+
         average = sum / (float)score.length;
 
         System.out.println("총점 : " + sum);

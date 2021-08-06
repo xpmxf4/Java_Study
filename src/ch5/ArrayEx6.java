@@ -9,8 +9,11 @@ public class ArrayEx6 {
 
         for (int i = 1; i < score.length; i++) {
             if (score[i] > max) {
+                System.out.println("max shit");
+
                 max = score[i];
             } else if (score[i] < min) {
+                System.out.println("min shit");
                 min = score[i];
             }
         }
