@@ -3,6 +3,8 @@ package ch5;
 import java.util.*;
 
 // 아니 =- 랑 일일히 - 쓰는 거랑 뭐가 다른거임???
+// ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ
+// =- 이 아니라 -= 네 ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ
 
 public class Exercise5_7$$ {
     public static void main(String[] args) {
@@ -23,19 +25,22 @@ public class Exercise5_7$$ {
             coinNum = money / coinUnit[i];
 
             if(coinNum <= 5){
-                coin[i] = coin[i] - coinNum;
-                money = money -  coinNum * coinUnit[i];
+                coin[i] -= coinNum;
+//                money -=  coinNum * coinUnit[i];
             } else {
-                coin[i] = coin[i] - 5;
-                money = money - coinUnit[i] * 5;
+                coin[i] =0;
+                coinNum = 5;
+//                money -= coinUnit[i] * 5;
             }
+            money -= coinUnit[i]* coinNum;
+
             /* (1) 아래의 로직에 맞게 코드를 작성하시오.
             1. 금액(money)을 동전단위로 나눠서 필요한 동전의 개수(coinNum)를 구한다.
             2. 배열 coin 에서 coinNum 만큼의 동전을 뺀다.(만일 충분한 동전이 없다면 배열 coin 에 있는 만큼만 뺀다.)
             3. 금액에서 동전의 개수(coinNum)와 동전단위를 곱한 값을 뺀다.
             */
         }
-        System.out.println("money = " + money);
+
 
         if (money > 0) {
             System.out.println("거스름돈이 부족합니다.");
