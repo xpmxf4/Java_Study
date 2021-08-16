@@ -6,11 +6,13 @@ package ch3;
 
 // 아얘 모르겠다...
 
+
 class Exercise3_9$$ {
     public static void main(String[] args) {
         char ch = 'z';
-        boolean b = true;
-        System.out.println();
+        boolean b = ('a' <= ch && ch <= 'z') || ('A' <= ch && ch <= 'Z') || ('0' <= ch && ch<= '9');
+
+        System.out.println("boolean b is "+ b);
     }
 }
 
