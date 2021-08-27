@@ -1,12 +1,8 @@
 # CH6 - 객체지향 ( OOP )
 
---------
+
 
 ## 6-1 객체지향언어
-
-----
-
-
 
 - 80년 초 소프트웨어 ( C 언어, Fortram, Cobol 등 절차적 언어들 ) 의 위기 - 세상의 빠른 변화를 못 쫓아감, 시대의 흐름에 따라 계속 발전해 가면서 바뀌어야 하는 데 이게 안되고 있었음. 
 
@@ -35,10 +31,6 @@
   4. **다형성 ( 남궁성님 가장 중요한 픽 !)**  
 
 ## 6-2~4 클래스와 객체
-
-----
-
-
 
 - 클래스의 정의 : 클래스란 **객체를 정의**해 놓은 것
 - 클래스의 용도 : 클래스는 **객체를 생성**하는 데 **사용** 
@@ -110,10 +102,6 @@ A. 객체가 가진 속성과 기능을 사용한다 라는 의미와 같다.
 
 ## CH6-5 하나의 소스파일에 여러 클래스 작성
 
---------
-
-
-
 ```java
 //Hello2.java
 public class Hello2{}
@@ -173,10 +161,6 @@ class Hello3{}
      
 
 ## CH6- 6, 7 객체의 생성과 사용
-
-----
-
-
 
 - 객체의 생성
 
@@ -244,8 +228,6 @@ class Hello3{}
 
 ## CH6- 8 객체배열
 
-------
-
 - 객체 배열 == 참조변수 배열 이라고 한다!
 
 ```java
@@ -287,8 +269,6 @@ tvArr[2] = new Tv();
   
 
 ## CH6-9, 10 클래스의 정의
-
--------
 
 
 
@@ -710,13 +690,11 @@ int max(int a, int b){
 
   ## CH6-23 기본형 매개변수
 
-  ---
-
   매개변수의 타입에는 2가지가 있다. 그리고 그 차이는 다음과 같다.
 
   1. **기본형 매개변수** ( 변수의 값을 읽기, read only )
   2. 참조형 매개변수 ( 변수의 값을 읽고 , 변경할 수 있다. == read & write )
-
+  
   이번 강의와 6-24 강의를 보고, 그 둘의 차이점을 인지하여 여기에다가 써보자!
 
   -----> 
@@ -745,7 +723,7 @@ int max(int a, int b){
       }
   }
   ```
-
+  
   
 
 ## CH6-24,25 참조형 매개변수,참조형 반환타입
@@ -791,24 +769,358 @@ class Ex6_8{
 
 
 
-## CH6-26 static 메서드와 인스턴스 메서드
+## CH6-26~29 static 메서드와 인스턴스 메서드
 
----
+- 인스턴스 메서드와 static 메서드의 차이 ==> iv(or 인스턴스 메서드) 를 사용할 수 있냐 없냐의 차이
 
 ```java
 class MyMath2{
     long a,b;
     
-    long add(){		// 인스턴스 메서드
+    long add(){		// 인스턴스 메서드, 여기서 a,b 는 iv
         return a+b;
     }
     
-    static long add(long a, long a){	// 클래스 메서드(static 메서드)
+    static long add(long a, long a){	// 클래스 메서드(static 메서드), 여기서 a,b 는 lv 
         return a+b;
     }
 }
 ```
 
-- 인스턴스 메서드
+```java
+class Test{
+    void instanceMethod();
+    static void classMethod();
+    
+    void instanceMethod2(){
+        instanceMethod();	// 가능
+        classMethod();		// 가능
+    }
+    
+    static void classMethod2(){
+        instanceMethod();	// 불가능
+        classMethod();		// 불가능
+    }
+}
+```
 
-  : 
+
+
+## CH 6-30~31 오버로딩
+
+- 한 클래스 안에 같은 이름의 메서드 여러 개 정의하는 것
+
+  ```java
+  void println();
+  void println(boolean x);
+  void println(char x);
+  void println(char[] x);
+  void println(double x);
+  void println(int x);
+  void println(long x);
+  void println(Object x);
+  ```
+
+  하지만 무지성으로 이름만 같다고 다 오버로딩이 아니고 다음과 같은 조건을 가진다
+
+- 오버로딩이 성립하기 위한 조건
+
+  1. 메서드의 이름이 같다
+  2. 매개변수의 개수 or 타입이 달라야 한다.
+  3. 반환 타입은 영향 x ==> 매개변수가 달라지는 시점에서 리턴타입이 당연히 달라지는 거라고 생각했는 데, 꼭 당연하지는 않은 듯. 매개변수가 리턴타입에 영향을 안 끼칠 수도 있으니.
+
+**좀 의외의 오버로딩
+
+```java
+long add(int a, long b){ return a+b; }
+long add(long a, int b){ return a+b; }
+	  ①        ② 위 두 가지의 메서드가 타입이 다르다고 본다.
+```
+
+
+
+## CH 6-32~35 생성자(constructor), 기본 생성자
+
+- 인스턴스가 생성될 떄마다 호출되는 인스턴스 초기화 메서드
+- 인스턴스 생성시 수행할 작업(iv 초기화)에 사용 
+- 즉, **생성자 = iv 초기화 메서드**
+
+```java
+Time t = new Time();
+t.hour = 12;
+t.minute = 34;
+t.second = 56;
+```
+
+```java
+Time t = new Time(12,34,56)	//Time(12,34,56)이 생성자 이고, 이 문장은 생성자를 호출한 것
+```
+
+
+
+- 이름이 클래스 이름과 같아야 한다.
+- 리턴값이 없다.(void 안 붙임)
+- 모튼 클래스는 반드시 생성자를 가져야 한다.
+
+```java
+클래스이름(타입 변수명, 타입 변수명){
+    // 인스턴스 생성시 수행될 코드
+    // 주로 인스턴스 변수의 초기화 코드를 적는 다
+}
+```
+
+
+
+- 기본 생성자
+
+  : 매개변수가 없는 생성자
+
+  ```java
+  클래스이름() {} // 기본 생성자
+  Point() {}	// Point 클래스의 기본 생성자
+  ```
+
+  : **클래스 마다 하나의 생성자를 무조건 만들어야 한다**. 근데 만약 사용자가 생성자를 하나도 안 만들면, 컴파일러가 알아서 기본 생성자 하나를 만들어준다.
+
+  : 근데 다음과 같이
+
+  ```java
+  class Point(){
+      int a = 1;
+      
+      Point(int b){
+          b;
+      }
+  }
+  ```
+
+  이렇게 있으면 에러가 난다. 
+
+## CH 6-36~37 생성자 this(), 참조변수 this
+
+- 생성자 this() 란?
+
+  : 생성자에서 다른 생성자 호출할 때 상요
+
+  : 다른 생성자 호출시 첫 줄에서만 사용가능
+
+  : this 를 사용하는 이유? ---> 코드의 중복을 제거하기 위해서!
+
+  ```java
+  class Car{
+      String color;
+      String geartype;
+      int door;
+      
+      Car(){
+          color = "blue";
+          geartype = "auto";
+          door = 4; 
+      }
+      
+      Car(String c, String g, int d){
+          color = c;
+          geartype = d;
+          door = d;
+      }
+  }
+  ```
+
+  위 코드에서  기본 생성자 Car 와 3가지 매개 변수를 받는 생성자 Car 의 코드는 중복이 된다
+
+  ----> 질 나쁜 코드
+
+  그래서 이러한 중복을 아래와 같이 this 로 제거할 수 있다.
+
+  ```java
+  class Car{
+      String color;
+      String geartype;
+      int door;
+      
+      Car(){
+          this("blue","auto",4);
+      }
+      
+      Car(String c, String g, int d){
+  		color = c;
+          geartype = g;
+          door = d;
+      }
+  }
+  ```
+
+
+
+- 참조변수 this 란? <---------------------------> this() 생성자, **this() 생성자랑 연관이 아얘 없다!!!**
+
+  : 인스턴스 자신을 가리키는 참조변수
+
+  : 인스턴스 메서드(생성자 포함) 에서 사용가능
+
+  : 지역변수(lv) 와 인스턴수 변수(iv) 를 구별할 때 사용 ( 다른 용도도 있지만, 일단은 이것만 알고 있자! 차차 알게 된다 )
+
+  ```java
+  //위에서 color = c 이렇게 했는 데,lv 하고 iv 의 이름이 같을 경우 참조변수 this 를 사용해 아래처럼 할 수 있다.
+  
+  Car(String color, String geartype, int door){
+      this.color = color;			// iv = lv
+      this.geartype = geartype;	// iv = lv
+      this.door = door;			// iv = lv
+  }
+  ```
+
+  
+
+**정리**
+
+- this 란?
+
+  : (인스턴스 자기 자신을 가르키는 ) 참조변수 
+
+  : 고로 this 안에는 인스턴스의 주소가 담겨 있음
+
+  : 모든 인스턴스 메서드에 지역변수로 숨겨진 채 존재한다
+
+  : im, 생성자에서는 사용 가능, static( 클래스 ) 메서드에서는 사용 못함.
+
+- this(), this(매개변수) 란?
+
+  : 생성자
+
+  : 같은 클래스의 다른 생성자를 호출하기 위해 사용
+
+```java
+class MyMath2{
+    long a,b; // iv
+    
+    MyMath2(int a, int b){
+        this.a = a;	// iv = lv
+        this.b = b;	// iv = lv
+    }
+	
+    long add(){	//im
+        return a+b;	//iv + iv 리턴함. 원래는 this.a + this.b 인데, 같은 클래스니까 생략됨.
+    }
+    
+    static long add(long a, long b){ // cm
+        return a+b;	// lv+lv 임. this 사용 불가능
+    }
+}
+```
+
+
+
+## CH6-38~41 변수의 초기화, 멤버 변수(iv, cv)의 초기화
+
+**지역변수(lv) 는 꼭 수동 초기화 해야함!!!!!(사용전 꼭!!!) ----> 우리가 직접 초기화 해야한다는 소리!**
+
+```java
+class InitTest{
+	int x;	// iv
+    int y = x;	// iv
+
+    void method1(){
+        int i;	// lv
+        int j = i;	// lv, 에러. 지역변수를 초기화하지 않고 사용.
+    }
+}
+```
+
+- 위 코드블럭을 보면, `int j = i` 에서 에러가 나타난다.
+
+  그 이유는 **i 는 lv(지역변수)  자동 초기화가 되지만 지역 변수는 자동 초기화가 되지 않는 다.**
+
+- lv / iv, cv 의 자동 초기화의 일어나도 안 일어나는 이유
+
+  lv 는 지역변수, 즉 메서드의 변수이다. 메서드 특성상 스택에서의 생명 주기가 짧은 편이기 때문에 
+
+  스택이 쌓일 때 일일히 0 으로 자동 초기화 해주는 데에는 **너무 낭비가 되기  때문에 스택에 쌓일 때마다 값을 일일히 덮어 씌우는 식으로 변수를 초기화 한다.**
+
+
+
+1. 명시적 초기화(=) <ㅡㅡ 선언시에 대입연산자를 통해서 초기화, 간단 초기화
+
+   ```java
+   class Car{
+       int door = 4;	// iv, 기본형 변수의 초기화
+       Engine e = new Engine();	// iv, 참조형 변수의 초기화
+   								// 이 부분을 어려워 하는 사람들이 있는 데, 참조형 변수는 가질 수 있는 값은 1. null 2. 객체주소이다. 이렇게 참조변수는 객체를 만들어서 넣어야 한다 기본적으로! new 연산자를 통해서 객체가 생성, 즉 주소가 생기는 거라 Engine e 만하면 그냥 참조형 변수 하나만 덩그러니 있는 거다.
+   }
+   ```
+
+
+
+2. 초기화 블럭( {} ) ㅡㅡㅡㅡ> 복잡한 초기화, 괄호안에 여러 문장 넣기
+   - *인스턴스 초기화 블럭(iv) : {}*
+   - *클래스 초기화 블럭(cv) : static {}*
+
+3. 생성자 ㅡㅡㅡㅡ > iv 초기화, 복잡한 초기화에 사용
+
+   ```java
+   Car(String color, String geartype, int door){
+       this.color = color;
+       this.gearType = gearType;
+       this.door = door;
+   }
+   ```
+
+   
+
+- 정리하면 초기화 에는 3가지 방법이 있다.
+
+  1. 자동 초기화 ==> 0
+  2. 간단 초기화 ==> =
+  3. 복잡 초기화
+     1. {} - iv, cv ( 이거 잘 안씀. 시험에나 좀 나오지 거의 안 씀 )
+     2. **static {} - cv**
+     3. **생성자 - iv**
+
+  복잡 초기화에선 2 3 만 기억하고 있자! 나중에 1 이 나오긴 하지만 지금 당장은 필요없다고 한다.
+
+
+
+- cv 의 복잡 초기화 한 예시
+
+  ```java
+  class StaticBlockTest{
+      static int[] arr = new int[10];	// 명시적 초기화
+  	
+      static {	// 클래스 초기화 블럭 - 배열 arr 을 난수로 채운다
+          for(int i = 0 ; i < arr.length ; i++){
+              arr[i] = (int)(Math.random()*10)+1;
+          }
+      }
+  }
+  ```
+
+
+
+- 클래스 변수 초기화 시점 : 클래스가 처음(메모리에 올라갈 때) 로딩될 때 단 한번
+- 인스턴스 변수 초기화 시점 : 인스턴스가 생성될 때 마다
+
+```java
+class initTest{
+    static int cv = 1;	// cv 명시적 초기화
+    int iv = 1; 		// iv 명시적 초기화
+    
+    static { cv = 2; }	// 클래스 초기화 블럭 ---> cv 복잡한 초기화
+    { iv = 2; }			// 인스턴스 초기화 블럭 ---> iv 복잡한 초기화
+    
+    InitTest(){			// 생성자, iv 복잡한 초기화
+        iv = 3;
+    }
+}
+```
+
+
+
+- 초기화 과정을 정리하면 다음과 같다.
+
+  ```java
+  자동 초기화 --------------> 명시적 초기화 --------------> 복잡한 초기화
+      0							=						 static {}
+  														  생성자
+  ```
+
+  
