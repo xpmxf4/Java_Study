@@ -43,7 +43,7 @@ class Parent{
 }
 
 class Child extends Parent{
-    void play(){		// 새로운 멤버가 추가됨. 하지만 이렇게 추가했다고 해서 Parent 클래스는 전혀~ 영향을 받지 않는 다.
+    	void play(){		// 새로운 멤버가 추가됨. 하지만 이렇게 추가했다고 해서 Parent 클래스는 전혀~ 영향을 받지 않는 다.
         System.out.println("놀자~");
     }
 }
@@ -119,7 +119,7 @@ class Circle {
 
 <img src="C:\Users\xpmxf\Desktop\asd.png" alt="asd" style="zoom:75%;" />
 
-오른쪽과 같이 클래스를 포함관계로 선언하면 iv 접근을 다음과 같이 해야한다.
+오른쪽과 같이 클래스를 포함관계로 선언하면 iv 접근을 다음과 같이 해야한다. ( 객체안에 객체 느낌! )
 
 ```java
 Circle circle = new Circle();
@@ -300,3 +300,417 @@ public class InheritanceTest {
 
 
 
+## 7-7 (메서드) 오버라이딩 (Overriding - 덮어쓰다)
+
+- 상속받는 조상의 메서드를 자신에 맞게 변경하는 것
+
+```java
+class Point {
+    int x;
+    int y;
+    
+    String getLocation(){
+        return "x : " + x + ", y : " + y;
+    }
+}
+
+class Point3D extends Point{
+    int z;
+    
+    String getLocation(){	// 오버라이딩, 선언(선언부)은 못 바꾸고 내용만 바꿈 == 구현부만 변경 가능
+        return "x : " + x + ", y : " + y + ", z :" + z;
+    }
+}
+```
+
+
+
+- 오버라이딩의 조건
+
+  1. 선언부가 조상 클래스의 메서드와 일치해야 한다.
+
+     ```java
+     class Point {
+         int x;
+         int y;
+         
+         public String toString(){	// Object 클래스에서 이렇게 선언되어 있으니까 그와 동일하게 선언부를 적어야 함.
+             return "x: " + x + ", y: " + y;
+         }
+     }
+     ```
+
+     
+
+  2. 접근 제어자를 조상 클래스의 메서드보다 좁은 범위로 변경할 수 없다.
+
+     접근 제어자란? ==> public, protected, (default) private  
+
+     접근 제어자 지금 모르는 건 ㄱㅊ음.
+
+     하지만 2번 항목을 외워는 두자!
+
+     
+
+  3. 예외는 조상 클래스의 메서드보다 많이 선언할 수 없다.
+
+     ```java
+     class Parent{
+         void parentMethod() throws IOException, SQLException{
+             // ...
+         }
+     }
+     
+     //class Child extends Parent{
+     //    void parentMethod() throws IOException, SQLExeption, SomethingException{	이렇게 부모보다 많은 예외처리 불가능!!
+     //        // ...
+     //    }
+     //}
+     
+     class Child extends Parent{
+         void parentMethod() throws IOException{	// 이렇게 부모이하(이 경우에는 2개 이하) 
+             // ...
+         }
+     }
+     ```
+
+
+
+- 오버로딩 vs 오버라이딩 ( 근본적으로 이 둘은 아무 관계가 없지만, 질문이 자주 들어와서 정리해준다고 함 )
+
+  오버로딩(Overloading) : 기존에 없는 새로운 메서드를 정의하는 것 (new) ==> 상속과 연관이 없음!
+
+  오버라이딩(Overriding) : 상복받은 메서드의 내용을 변경하는 것 (change, modify) ==> 상속과 연관 있음!
+
+  ```java
+  class Parent {
+      void parentMethod() {}
+  }
+  
+  class Child extends Parent {
+      void parentMethod() {}			// 오버라이딩
+      void parentMethod(int i) {}		// **** 오버라이딩 이라고 했는 데, 오버로딩임!!!!!
+      
+      void childMethod() {}			// 그냥 메서드 정의
+      void childMethod(int i) {}		// 오버로딩
+      void childMethod() {}			// **** 오버로딩이라고 했는 데, 그냥 중복정의임 ==> 에러임!
+  }
+  ```
+
+  
+
+## 7-10~11 참조변수 super, 생성자 super() ==> 이번 단원 중요!
+
+- super 란?  ≒ this , this 는 lv 와 iv 구별할 때 사용
+
+  : 객체 자신을 가리키는 참조변수. 인스턴스 메서드(생성자) 내에만 존재 ==> static 메서드 내에서 사용 불가\
+
+  : 조상의 멤버를 자신의 멤버와 구별할 때 사용
+
+```java
+class Ex7_2{
+    public static void main(String[] args){
+        Child c = new Child();
+        c.method();
+    }
+}
+
+class Parent {int x = 10; }
+
+class Child extends Parent{
+    int x = 20;
+    
+    void method(){
+        System.out.println("x = "+ x);
+        System.out.println("this.x = "+ this.x);
+        System.out.println("super.x = "+ super.x);
+    }
+}
+```
+
+​	: 즉, 상속이 될 때 변수의 이름이 같아도 상속은 잘 된다. 구분을 super 와 this 로 함!
+
+
+
+-  super() - **조상의 생성자**, 참조변수 super 와는 아얘 다른 것!
+
+  : 조상의 생성자를 호출할 때 사용 ==>  ∵ 상속 받을 때 코드블럭하고 생성자는 상속되지 않음!
+
+  : 조상의 멤버는 조상의 생성자를 호출해서 초기화.
+
+```java
+class Point {
+    int x,y;
+    
+    Point(int x, int y ){
+        this.x = x;
+        this.y = y;
+    }
+}
+
+class Point3D extends Point{
+    int z;
+    
+    Point3D(int x, int y, int z){
+        this.x = x;	// 조상의 멤버를 초기화, 이렇게 하는 게 오류는 나지 않는 다. 하지만 자손의 생성자(이 경우에는 Point3D) 는 자기가 선언한 것만 초기화 해야한다. 그래서 z 만 하는 게 맞음
+        this.y = y;	// 조상의 멤버를 초기화
+        this.z = z;
+    }
+}
+
+// 그래서 이렇게 하는 게 맞음
+
+Point3D(int x, int y,int z){
+    super(x,y);
+    this.z = z;
+}
+```
+
+
+
+: **생성자의 첫 줄에 반드시 다른 생성자를 호출해야 한다.** ====> **매우매우매우매우매우 중요함!!**
+
+그렇지 않으면 컴파일러가 생성자의 첫 줄에 super() (=조상의 기본 생성자) 를 삽입해버림
+
+```java
+class Point{
+    int x;
+    int y;
+
+    Point(int x, int y){
+        this.x = x;
+        this.y = y;
+    }
+
+    String getLocation(){
+        return "x: " + x + ", y: " + y;
+    }
+}
+
+class Point3D extends Point4{
+    int z;
+
+    Point3D(int x, int y, int z){
+        // 여기에 원래 생성자가 있어야 한다. 하지만 없어서 컴파일러가 대신 super() 를 넣어줌. 근데 여기서 super() == Point() 인데, Point 클래스에는 기본 생성자가 없고 두 개의 int 를 받는 생성자만 존재함. 그래서 super() 는 없는 생성자를 호출하는 것이 됨으로 에러임!!!
+        // 그래서 항상 기본 생성자를 넣으라는 규칙을 외워야 한다!!!!!!!!!!!!!!!!!
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+
+    String getLocation(){
+        return "x: " + x + ", y: " + y + ", z: " + z;
+    }
+}
+
+public class PointTest {
+    public static void main(String[] args) {
+        Point3D p3 = new Point3D(1, 2, 3);
+        System.out.println(p3.getLocation());
+    }
+}
+
+// 아니면
+Point3D(int x, int y, int z){
+    super(x,y);
+    this.z = z; // 하지만 어쨌든 기본 생성자는 항상 넣자!!
+}
+```
+
+- **(조건)그래서 항상 기본 생성자를 넣으라는 규칙을 외워야 한다!!!!!!!!!!!!!!!!!**
+
+- **모든 생성자는 첫 줄에 다른 생성자를 호출해야 한다!!!**
+
+
+
+## 7-12 패키지(package)
+
+- 서로 관련된 클래스들의 묶음
+
+  : Java8 은 약 4000개의 클래스들이 있음. 이것들을 관리하기 위해 묶음!
+
+  : 클래스는 클래스 파일(*.class), 패키지는 폴더. 하위 패키지는 하위 폴더
+
+  : 클래스의 실제 이름(full name)은 패키지를 포함.(java.lang.String)
+
+  : rt.jar 는 클래스들을 압축한 파일 ( JDK 설치 경로\jre\lib 에 위치 ) ==> Java9 부터 사라짐 (∵ rt.jar 파일이 너무 큼, module 개념이 나오면서 module 로 쪼개놓음 )
+
+  여기서 rt 는 runtime(실행할 때, 실행중), 자바 실행시에 필요한 클래스들의 모음이 rt.jar(클래스 파일 묶어놓은 것) 이다
+
+
+
+- 패키지의 선언
+
+  : 패키지는 소스파일의 첫 번째 문장으로 단 한번 선언
+
+  : 같은 소스 파일의 클래스들은 코두 같은 패키지에 속하게 된다.
+
+  : 패키지 선언이 없으면 이름없는 (unnamed) 패키지에 속하게 된다.
+
+  ```java
+  package com.codechobo.book;
+  
+  public class packageTest{
+      public static void main(String[] args){
+          System.out.println("Hello, World");
+      }
+  }
+  
+  class PackageTest2{}
+  ```
+
+
+
+- 클래스 패스(classpath)
+
+  : 클래스 파일(*.class) 의 위치를 알려주는 경로(path)
+
+  : 환경변수 classpath 로 관리하며, 경로간의 구분자는 ' ; ' 를 상요
+
+  : classpath(환경변수) 에 패키기의 루트를 등록해서 사용 가능함
+
+  : 제어판에서 환경변수 편집하기!! ==> 우리가 지금까지 IntelliJ 가 알아서 다 해줬지만, 알아서 이렇게 다 할줄 알아야 한다.
+
+
+
+## 7-15~16 import 문, static import 문
+
+- 클래스를 사용할 때 패키지 이름을 생략할 수 있다.
+
+  ```java
+  class ImportTest{
+      java.util.Date today = new java.util.Date();
+  }
+  
+  // 다음과 같이 변경
+  
+  import java.util.Date;
+  
+  class ImportTest{
+      Date today = new Date();
+  }
+  ```
+
+  
+
+- java.lang 패키지의 클래스는 import 하지 않고도 사용할 수 있다.
+
+  String, Object, System, Thread ...
+
+  ```java
+  import java.lang.*;	// java.lang 에 있는 모든 클래스를 import 함
+  
+  class ImportTest2{
+      public static void main(String[] args){
+          System.out.println("Hello");
+      }
+  }
+  
+  // 만약 import 문이 없었거나, java.lang 이 알아서 import 가 되지 않았더라면...
+  
+  class ImportTest2{
+      public static void main(java.lang.String[] args){
+          java.lang.System.out.println("Hello");
+      }
+  }
+  ```
+
+
+
+- import 문을 선언하는 방법은 다음과 같다.
+
+  ```java
+  import 패키지명.클래스명;
+  
+  or
+      
+  import 패키지명.*;
+  ```
+
+  
+
+- import 문은 패키지문과 클래스선언의 사이에 선언한다.
+
+  ```java
+  package ch7;	// 패키지문
+  
+  import java.util.*;	// import 문
+  
+  public class PointTest{	// 클래스 선언
+      public static void main(String[] args){
+          Date date = new Date();
+          System.out.println(date);
+      }
+  }
+  ```
+
+  
+
+- import 문은 컴파일 시에 처리되므로 프로그램의 성능에 영향없음.
+
+  ```java
+  import java.util.Calendar;
+  import java.util.Date;
+  import java.util.ArrayList;
+  
+  // 아래처럼 쓰면 프로그램의 성능이 느려지는 것이 아니냐 라고 말할 수도 있다. 하지만 전혀 그렇지 않다. 다만 컴파일시 조금 느려질 수는 있다.
+  
+  import java.util.*;
+  ```
+
+  
+
+- 다음의 두 코드는 서로 의미가 다르다.
+
+  ```java
+  import java.util.*;
+  import java.text.*;
+  
+  과
+  
+  import java.*;
+  ```
+
+  
+
+- 이름이 같은 클래스가 속한 두 패키지를 import 할 때는 클래스 앞에 패키지명을 붙여줘야 한다.
+
+  ```java
+  import java.sql.*;	//java.sql.Date 가 있음
+  import java.util.*;	//java.util.Date 가 있음
+  
+  public class ImportTest{
+       public static void main(String[] args){
+           java.util.Date today = new java.util.Date();	// 그래서 여기에서 그냥 Date 라고만 하면 컴파일러가 누구의 패키지에서 Date 클래스를 가져오는 지 모름. ==> 이렇게 명시적으로 해야함.
+       }
+  }
+  ```
+
+  
+
+- static 멤버를 사용할 때 클래스 이름을 생략할 수 있게 해준다.
+
+  ```java
+  import static java.lang.Integer.*;	// Integer클래스의 모든 static 메서드
+  import static java.lang.Math.random;// Math.random()만 ==> random() 이렇게 사용 가능
+  import static java.lang.System.out;	// System. 중 out만 ==> out() 이렇게 사용 가능
+  ```
+
+  ```java
+  import static java.lang.System.out;
+  import static java.lang.Math.*;
+  
+  class Ex7_6{
+      public static void main(String[] args){
+          //System.out.println(Math.random());
+      	out.println(random());
+          
+          //System.out.println("Math.Pi : " + Math.PI);
+          out.println("Math.Pi : " + Math.PI)
+      }
+  }
+  ```
+
+  : static import 문을 사용하는 이유?
+
+  ==> 클래스 이름 일일히 붙여가면서 사용하면 코드가 너무 길어진다. 그래서 줄일려고 나중에 static import 가 생기긴 했는 데, 그래도 일일히 써주는 게 명시적이니까, 앵간하면 일일히 쓰자!

@@ -13,7 +13,6 @@ class Circle {
 //    Point p = new Point();
     int r;
     Point p;
-
     Circle(){
         p = new Point();
     }
