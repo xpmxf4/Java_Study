@@ -344,7 +344,7 @@ class Point3D extends Point{
 
   2. 접근 제어자를 조상 클래스의 메서드보다 좁은 범위로 변경할 수 없다.
 
-     접근 제어자란? ==> public, protected, (default) private  
+     접근 제어자란? ==> public, protected, (default), private  
 
      접근 제어자 지금 모르는 건 ㄱㅊ음.
 
@@ -824,4 +824,249 @@ Point3D(int x, int y, int z){
 
   그래야 객체생성이 가능해진다!
 
-- 
+
+
+
+## 7-12 접근 제어자(access modifier)
+
+1. private : 같은 클래스 내에서만 접근이 가능하다
+2. (default) : 같은 패키지 내에서만 접근이 가능하다.
+3. protected : 같은 패키지 내에서, 그리고 다른 패키지의 자손클래스에서 접근이 가능하다.
+4. public : 접근 제한이 전혀 없다.
+
+이 중 한개만 가능하다! 
+
+|  제어자   | 같은 클래스 | 같은 패키지 | 자손 클래스 | 전체 |
+| :-------: | :---------: | :---------: | :---------: | :--: |
+|  public   |      O      |      O      |      O      |  O   |
+| protected |      O      |      O      |      O      |  X   |
+| (default) |      O      |      O      |      X      |  X   |
+|  private  |      O      |      X      |      X      |  X   |
+
+```java
+접근제한 없음						 같은 패키지+자손						    같은 패키지								 같은 클래스
+public ========================> protected ========================> (default) ========================> private
+```
+
+<img src="C:\Users\xpmxf\AppData\Roaming\Typora\typora-user-images\image-20210831170809636.png" alt="image-20210831170809636" style="zoom:50%;" />
+
+
+
+
+
+## 7-23 캡슐화 & 접근 제어자
+
+접근 제어자를 사용하는 이유?
+
+1. 외부로부터 데이터를 보호하기 위해서 ==> 이걸 캡슐화라고 한다!
+
+```java
+public class Time{
+    public int hour;
+    public int minute;
+    public int second;
+}
+
+// 위처럼 세팅 되어 있으면
+
+Time t = new Time();
+t.hour = 25;	// 멤머변수에 직접 접근, 근데 이렇게 hour 는 0~24 여야 하는 데, 이렇게 하면 hour 라는 변수에 아무 값이나 집어넣을 수 있게 된다. ==> 데이터가 보호가 안된다
+```
+
+그래서 다음과 같이 해서 보호해야 한다.
+
+```java
+public class Time{
+    private int hour;
+    private int minute;
+    private int second;		// 접근 제어자를 private 으로 하여 외부에서 직접 접근하지 못하게 한다.
+    
+    public int getHour(){ return hour;}
+    public void setHour(int hour){		// 이렇게 메서드로 간접 접근하게 해야 함. 이런 식으로 코딩해야 함!
+        if( hour < 0 || hour > 23) return;
+        this.hour = hour;
+    }
+}
+
+Time t = new Time();
+t.setHour(25); // 범위를 벋어나므로 return 을 만나 hour 값이 25로 안 바뀜 ==> if 문으로 개같은 경우를 걸러 값을 보호함
+t.setHour(11); // t 의 hour 가 11로 세팅이 됨
+```
+
+2. 외부에는 불필요한, 내부적으로만 사용되는, 부분을 감추기 위해서!
+
+   : 접근 제어자는 좁을 수록 좋다!
+
+```java
+class Time{
+    private int hour;
+    private int minute;
+    private int second;
+
+    public void setHour(int hour){
+        if(isNotValidHour(hour)) return;
+        this.hour = hour;
+    }
+
+    public int getHour(){
+        return hour;
+    }
+
+    private boolean isNotValidHour(int hour){   // 내부에서만 쓸 메서드라 private 로 선언해서 씀. 만약 메서드를 변경하면 테스트를 다시 해야되는데,
+                                                // private 인 테스트는 그 클래스 안에서만 테스트를 하면 된다는 걸 알 수 있다.
+                                                // ==> 테스트의 범위를 줄일 수 있다 !!!!!
+        return hour < 0 || hour > 24;
+    }
+}
+
+public class TimeTest {
+    public static void main(String[] args) {
+        Time t = new Time();
+//        t.hour = 22;
+        t.setHour(22);  //  hour 의 값을 22로 변경.
+        System.out.println(t.getHour());
+        t.setHour(100);
+        System.out.println(t.getHour());
+    }
+}
+```
+
+
+
+## 7-23 다형성(polymorphism) - 개 중요, 
+
+##### 이걸 이해 못하면 뒤에 나오는 추상 클래스 등 뒤의 진도를 할 필요가 없다!!! 매우 중요!
+
+
+
+- 여러 가지 형태를 가질 수 있는 능력 == 사전적 정의
+
+- 조상 타입 참조 변수로 자손 타입 객체를 다루는 것. == 만약 다형성이 뭐냐고 질문 받았을 때 나와야 하는 답!
+
+  ```java
+  class Tv{
+      boolean power;
+      int channel;
+      
+      void power() {power = !power;}
+      void channelUp() { ++channel; }
+      void channelDown() { --channel; }
+  }
+  
+  class SmartTv extends Tv{
+      String text;
+      void caption();
+  }
+  
+  Tv t = new SmartTv();	// 이런 게 타입 불일치를 얘기하는 거임!!
+  ```
+
+  
+
+- 일치하는 게 일반적인데 불일치 할때의 2 가지 장점이 있어서 다형성이 중요하고, 객체지향개념에 유연성을 준다!
+
+
+
+- 객체와 참조변수의 타입이 일치할 때와 일치하지 않을 때의 차이?
+
+- 부모 타입의 참조변수로 자식 타입의 객체를 가리킬 순 있다.
+
+  ```java
+  SmartTv s = new SmartTv();	// 참조 변수와 인스턴스의 타입이 일치
+  Tv t = new SmartTv();		 // 조상 타입 참조변수로 자손 타입 인스턴스 참조
+  ```
+
+  기능이 7개 있는 데 사용을 2개 안하는 건 ok!
+
+
+
+- 하지만 자손 타입의 참조변수로 부모 타입의 객체를 가리킬 순 없다.
+
+  ```java
+  Tv t = new SmartTv();	// 이건 됨.
+  SmartTv s = new Tv();	// 이건 안됨
+  ```
+
+  그런데 기능이 5개 밖에 없는 데 5개에 없는 기능을 사용하려고 하면 그건 Trouble!
+
+
+
+- Q. 참조변수의 타입은 인스턴스의 타입과 반드시 일치해야 하나요?
+
+  : No! 일치하는 것이 보통이지만, 일치 하지 않을 수도 있다!
+
+  ```java
+  SmartTv t = new SmartTv();	// ㄱㅊ
+  Tv t = new SmartTv();	// ㄱㅊ
+  ```
+
+
+
+- Q. 참조변수가 조상타입일 때와 자손타입일 때의 차이?
+
+  : 참조변수로 사용할 수 있는 멤버의 갯수가 달라진다!
+
+  
+
+- 자손 타입의 참조변수로 조상 타입의 객체를 가리킬 수 있나요?
+
+  : No! 
+
+  ```java
+  Tv t = new SmartTv();	// 가능
+  SmartTv s = new Tv();	// 불가능!
+  ```
+
+  
+
+  
+
+## 7-24,25 참조변수의 형변환 (1)
+
+- 결론 ! : 사용할 수 있는 멤버의 갯수를 조절하는 것!!
+
+  ==> 주소값, 참조변수 값, 객체 이런 거 하나도 안 바뀜!
+
+  ==> 뭐만 바뀐다? 멤버 갯수만 바뀐다!
+
+
+
+- 조상, 자손 관계의 참조변수는 서로 형변환 가능!
+
+  
+
+  ![image-20210901174448009](C:\Users\xpmxf\AppData\Roaming\Typora\typora-user-images\image-20210901174448009.png)
+
+  FireEngine 과 Car, Ambulance 와 Car 끼린 서로 형변환이 가능하다. 
+
+  하지만 FireEngine 과 Ambulance 끼리는 불가능!
+
+  ```java
+  class Car {
+      String color;
+      int door;
+      
+      void drive() {
+          System.out.println("drive, Brrrr~")
+      }
+      
+      void stop() {
+          System.out.println("stop. Beep")
+      }
+  }
+  
+  class FireEngine extends Car{
+      void water(){
+          System.out.println("water!!!")
+      }
+  }
+  
+  FireEngine f = new FireEngine();
+  
+  Car c = (Car) f;					//
+  FireEngine f2 = (FireEngine) c;    //
+  Ambulance a = (Ambulance) f;	//
+  ```
+
+  
+
