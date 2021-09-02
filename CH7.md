@@ -1060,13 +1060,348 @@ public class TimeTest {
           System.out.println("water!!!")
       }
   }
-  
+   
   FireEngine f = new FireEngine();
   
-  Car c = (Car) f;					//
-  FireEngine f2 = (FireEngine) c;    //
-  Ambulance a = (Ambulance) f;	//
+  Car c = (Car) f;					// 생략 가능, 조상 = 자손
+  FireEngine f2 = (FireEngine) c;    // 자손 = 조상
+  Ambulance a = (Ambulance) f;	// 에러, 형제끼리 안됨
   ```
+
+  **근데 여기서 생략이 되냐 안되냐는 중요하지가 않고, 조상, 자손 관계가 서로 참조변수의 형변환이 가능하다는 것이다.**
+  
+  여기서 c 가 가능한건 c.color, c.door, c.drive(), c.stop() 이 4개만 가능함. 
+  
+  f2 는 다시 5개 다 가능함.
+  
+  
+  
+  ```java
+  Car car = null;
+  FireEngine fe = null;
+  FireEngine fe = (FireEngine) car;	
+  fe.water();	// 컴파일 에러 없음
+  ```
+  
+  이렇게 하면 컴파일 에러는 안 뜬다. 
+  
+  하지만 실행시키게 되면 에러가 뜨게 된다. 왜냐하면 만들어진 실객체가 없기 때문!! 
+  
+  그래서 중요한 것
+  
+  **참조변수가 실제로 가리키는 객체가 무엇이냐?** 
+  
+  
+  
+  ```java
+  Car c = new Car();
+  FireEngine fe = (FireEngine) c;	// Exception in thread "main" java.lang.ClassCastException
+  // 이렇게 하면 컴파일시에는 에러가 나지 않는 다. 하지만 실행하게 되면 틀림. 왜냐하면 실객체 안에는 water()가 없음!
+  fe.water() 
+  ```
+  
+  
+  
+  
+
+## 7-26 instanceof 연산자
+
+- 참조변수의 형변환 가능여부 확인에 사용. 가능하면 true 반환
+
+  : 참조변수의 형변환은 조상 < == > 자손 에서만 가능
+
+  : 형변환 하기 전에 instanceof 연산자를 사용하고 형변환을 한다.
+
+  
+
+- 형변환 전에 반드시 instanceof로 확인해야함!
+
+  ```java
+  void doWork(Car c){	// 여기에는 new Car(), new FireEngine(), new Ambulance() 모두 다 들어올 수 있다. 왜? 다형성!!
+    if(c instanceof FireEngine){			// 1. 형변환이 가능한지 확인
+      FireEngine fe = (FireEngine) c;	// 2. 형변환
+      fe.water();
+    }else if(c instanceof Ambulance){
+      Ambulance a = (Ambulance) c;
+      // a.something()
+    }
+  }
+  ```
+
+  형변환을 하는 이유는 인스턴스의 원래 기능을 모두 사용하려고!
+
+  Car타입의 리모콘인 c로는 water()를 호출할 수 없기에 형변환을 해준다.
+
+  리모콘을 FireEngine 타입으로 바꿔서 water() 로 호출.
+
+  ```java
+  Object
+  ↑
+  Car
+  ↑
+  FireEngine
+  
+  FireEngine fe = new FireEngine();
+  System.out.println(fe instanceof Object);	// true
+  System.out.println(fe instanceof Car);	// true
+  System.out.println(fe instanceof FireEngine);	// true
+  
+  Object obj = (Object) fe;	// 가능
+  Car car = (Car) fe;				// 가능
+  ```
+
+  
+
+  1. Instanceof 로 형변환이 가능한지 확인
+  2. 형변환
+
+  
+
+- **Q. 참조변수의 형변환은 왜 하나요?**
+
+  A. 참조변수(리모콘)을 변경함으로써 사용할 수 있는 멤버의 갯수를 조절하기 위해서!
+
+  ```java
+  FireEngine f = new FireEngine();
+  Car c = (Car) f;	// 사실 형변환은 별거 아님. 대입연산자는 양쪽이 같은 타입이어야 하니까 참조변수의 타입을 변환을 해주는 것임.
+  ```
+
+
+
+- Q.instanceof 연산자는 언제 사용하나요?
+
+  A. 참조변수를 형변환 하기 전에 형변환 가능여부를 확인할 때
+
+  ```java
+  void doWork(Car c){
+    if(c instanceof FireEngine){
+      FireEngine fe = (FireEngine) c;
+      fe.water();
+    }
+  }
+  ```
+
+  
+
+## 7-27,28 매개변수의 다형성
+
+- 다형성의 장점이란?
+
+  1. **다형성 매개변수** ==> 이번 단원은 이것에 대해 배운다!
+  2. 하나의 배열로 여러 종류 객체 다루기
+
+  이번 강의에서 이 2가지를 배움
+
+
+
+- 다형성이란?
+  	1. Tv t = new SmartTv();
+   	2. 참조변수의 형변환 ==> 리모콘 바꾸기, 왜? 사용할 수 있는 멤버의 갯수 조절
+   	3. Instance 연산자 ==> 형변환 가능여부 체크
+
+
+
+- 매개변수의 다형성
+
+  : 참조형 매개변수는 메서드 호출시, **자신과 같은 타입 또는 자손타입의 인스턴스를 넘겨줄 수 있다**.
+
+  ```java
+  class Product{		// 부모
+    int price;			// 제품가격
+    int bonusPoint;	// 보너스점수
+  }
+  
+  class Tv extends Product{}				// 자손
+  class Computer extends Product{}	// 자손
+  class Audio extends Product{}			// 자손
+  
+  class Buyer {	// 소비자
+    int money = 1000;		// 소유금액
+    int bonusPoint = 0;	// 보너스점수
+  }
+  ```
+
+  Buyer 클래스에다가 다음 코드를 추가하고 싶다고 해보자
+
+  ```java
+  void buy(Tv t){
+    money -= t.price;
+    bonusPoint += t.bonusPoint;
+  }
+  ```
+
+  이렇게 되면 우리는 Tv 뿐만이 아니라 Computer, Audio 클래스 까지 고려해야 하므로 일단 배웠던 오버로딩을 생각해볼 수 있다.
+
+  ```java
+  void buy(Tv t){
+    money -= t.price;
+    bonusPoint += t.bonusPoint;
+  }
+  
+  void buy(Audio a){
+    money -= a.price;
+    bonusPoint += a.bonusPoint;
+  }
+  
+  void buy(Computer c){
+    money -= c.price;
+    bonusPoint += c.bonusPoint;
+  }
+  ```
+
+  보면 알겠지만 심각한 중복이 일어나게 된다... 이때 다형성의 장점이 나오게 된다.
+
+  ```java
+  void buy(Product p){
+    money -= p.price;
+    bonusPoint += p.bonusPoint;
+  }
+  ```
+
+  매개변수 p 는 Product 타입의 참조변수인데 다형성이라는 특징을 가지기 때문에 매개변수에는 Product 의 자손인 Computer, Audio, Tv 3 가지가 모두 들어갈 수 있다.
+
+
+
+```
+class Product{
+    int price;
+    int bonusPoint;
+
+    Product(int price){
+        this.price = price;
+        bonusPoint = (int)(price/10.0);
+    }
+}
+
+class Nintendo extends Product{
+    Nintendo(){
+        super(100);
+    }
+    public String toString(){
+        return "Nintendo";
+    }
+}
+class Computer extends Product {
+    Computer(){
+        super(200);
+    }
+
+    public String toString() {
+        return "Computer";
+    }
+}
+class Audio extends Product{
+    Audio(){
+        super(100);
+    }
+    public String toString(){
+        return "Audio";
+    }
+}
+
+class Buyer{
+    int money = 1000;
+    int bonusPoint = 0;
+
+    void buy(Product p ){
+        if(money < p.price){
+            System.out.println("돈이 부족하여 물건을 구입할 수 없습니다!");
+            return;
+        }
+
+        money -= p.price;
+        bonusPoint += p.bonusPoint;
+        System.out.println(p + "을/를 구입하셨습니다");
+    }
+}
+
+public class Ex7_8 {
+    public static void main(String[] args) {
+        Buyer b = new Buyer();
+
+        // 이 아래 코드가 조금 헷갈렸는데, 아니다 다를까 갓궁성님 바로 집어주심
+        b.buy(new Nintendo());  // 이렇게 해도 상관이 없다. 대신 참조변수를 선언을 안해주니까 이 클래스 안에서는 사용못하고, buy 메서드 안에서는 참조변수로 객체를 받기 때문에 객체를 사용할 수 있다!
+        b.buy(new Computer());
+        b.buy(new Audio());
+
+        int i = 10;
+        System.out.println(i);
+        // 이거랑 다를 게 없는 코드임!
+
+
+        System.out.println(b.money+"남았습니다!");
+        System.out.println(b.bonusPoint+"가 현재 보너스 포인트입니다!");
+    }
+}
+```
+
+
+
+## 7-29 여러 종류의 객체를 배열로 다루기
+
+저번 시간 초입부에 말했던 다형성의 장점에는 2가지가 있다.
+
+1. 다형적 매개변수
+2. **하나의 배열에 여러 종류 객체 저장 ** 
+
+이번에는 2번의 대해서 배워본다.
+
+2번에서 보면 배열이란 같은 타입밖에 저장이 안된다.
+
+다형성을 이용하면 하나의 배열에 여러 종류의 객체를 저장할 수 있게 된다!!
+
+
+
+- 조상타입의 배열에 자손들의 객체를 담을 수 있다.
+
+  ```java
+  Product{
+    int price;
+  }
+  Tv extends Product{}
+  Computer extends Product{}
+  Audio extends Product{}
+  
+  Product p1 = new Tv();
+  Product p2 = new Computer();
+  Product p3 = new Audio();
+  // 위처럼 쓴걸 다음과 같은 코드로 바꿀 수 있다. 뭐 같긴 함
+  // 근데 밑의 코드는 묶어놓은 거고, 위는 안 묶어 놓은 것
+  
+  Product[] p = new Product[3];	// 이거 그려보자
+  p[0] = new Tv();			// Product 객체만 올수 있을 거 같지만, 다형성 때문에 Product의 자손인 Tv 도 가능함.
+  p[1] = new Computer();
+  p[2] = new Audio();
+  ```
+
+  ```java
+  class Buyer = {
+    int money = 1000;
+    int bonusPoint = 0;
+    
+    Product[] cart = new Product[10];
+    
+    int i = 0;
+    
+    void buy(Product p){
+      if(money < p.price){
+        System.out.println("잔액부족입니다.");
+        return;
+      }
+      money -= p.price;
+      bonusPoint += p.bonusPoint;
+      cart[i++] = p;
+    }
+  }
+  ```
+
+  - 여담으로 Vector 라는 클래스 안에는 Object[] 라는 가변 배열이 존재한다. 그래서 위 코드처럼 new Product[10] 처럼 배열의 크기가 고정되고, 나중에 추가해야될 상품이 100개나 되는 대처하기 힘든 경우를 대처할 수 있음. 나중에 11장에서 배울 예정이다.
+
+  
+
+  
+
+  
 
   
 
