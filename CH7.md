@@ -1089,7 +1089,7 @@ public class TimeTest {
   
   그래서 중요한 것
   
-  **참조변수가 실제로 가리키는 객체가 무엇이냐?** 
+  **참조변수가 실제로 가리키는 객체가 무엇이냐? 를 아는 것** 
   
   
   
@@ -1100,7 +1100,7 @@ public class TimeTest {
   fe.water() 
   ```
   
-  
+  2번째 줄아 안되는 건 어째보면 당연하다. 왜냐하면 부모의 객체를 자손의 참조변수로 가리키는 꼴이 되니까!
   
   
 
@@ -1168,7 +1168,7 @@ public class TimeTest {
 
 
 
-- Q.instanceof 연산자는 언제 사용하나요?
+- **Q.instanceof 연산자는 언제 사용하나요?**
 
   A. 참조변수를 형변환 하기 전에 형변환 가능여부를 확인할 때
 
@@ -1262,7 +1262,7 @@ public class TimeTest {
 
 
 
-```
+```java
 class Product{
     int price;
     int bonusPoint;
@@ -1401,7 +1401,336 @@ public class Ex7_8 {
 
   
 
-  
+  ## 7-34 추상클래스의 작성
+
+  추상 클래스란 ? == 추상 메서드를 가지고 있음
+
+  그렇다면 추상 메서드란? == 몸통, 즉 구현부를 가지고 있지 
 
   
+
+  - 여러 클래스에 공통적으로 사용될 수 있는 추상 클래스를 바로 작성하거나, 기존 클래스의 공통 부분을 뽑아서 추상클래스를 만든다.
+
+    ```java
+    class Marine {
+      int x, y;
+      void move(int x, int y){ /*지정된 위치로 이동*/}
+      void stop() {/*현재 위치에 정지*/}
+      void stimPack() {/*스팀팩 사용*/ }
+    }
+    
+    class Tank{
+      int x,y;
+      void move(int x, int y){ /*지정된 위치로 이동*/}
+      void stop() {/*현재 위치에 정지*/}
+    	void changeMode() {/* 공격모드로 전환 */ }
+    }
+    
+    class Dropship{
+      int x, y;
+      void move(int x, int y){ /*지정된 위치로 이동*/}
+      void stop() {/*현재 위치에 정지*/}
+    	void load()	{/*선택된 대상을 태운다 */}
+      void unload() {/*선택된 대상을 내린다 */}
+    }
+    ```
+
+    위 코드를 보면 중복이 있다! 그래서 이를 추상클래스를 이용해서 코드를 바꾸면
+
+    ```java
+    abstract class Unit {
+      int x,y;
+      abstract void move (int x, int y);	// 이동하는 게 공중, 지상 유닛에 따라 다르기 때문에 몸통 부분이 다를 것 ==> 추상 메서드로 남겨둠, 자손 클래스들이 직접 작성해야 사용 가능함. 근데 사실 몸통만들어서 추상메서드로 안 만들어도 되긴 함. 근데 추상메서드로 남김으로써 자손들이 강제로 만들도록 함.
+      void stop() {/* 현재 위치에 정지 */}
+    }
+    
+    class Marine extends Unit {
+      void move(int x, int y){ /*지상 유닛 무빙 */ }
+      void stimPack() {/* 스팀팩 사용 */ }
+    }
+    
+    class Tank extends Unit {
+      void move(int x, int y){ /*지정된 위치로 이동*/}
+      void changeMode() {/* 공격모드로 전환 */ }
+    }
+    
+    class Dropship extends Unit {
+      void move(int x, int y){ }
+      void load()	{/*선택된 대상을 태운다 */}
+      void unload() {/*선택된 대상을 내린다 */}
+    }
+    
+    Unit[] group = new Unit[3];
+    group[0] = new Marine();
+    group[1] = new Tank();
+    group[2] = new Dropshop();
+    
+    for(int i = 0 ; i < group.length; i++)
+      group[i].move(100,200); // 이렇게 하면 뭐가 실행이 될까? ==> 각각의 실객체, 즉 Marine, Tank, Dropship 각각의 실객체의 메서드가 호출되는 거지, 추상 클래스의 메서드가 불러와져서 실행되는 게 아니다.
+    ```
+
+    근데 만약 위에서 Unit[] group 이 Object[] group 으로 되어 있으면 어떻게 되냐?
+
+    ```java
+    Object[] group = new Unit[3];
+    group[0] = new Marine();
+    group[1] = new Tank();
+    group[2] = new Dropship();
+    // 여기 까진 넣어짐. 다형성 때문에
+    
+    for(int i = 0 ; i < group.length ; i++){
+      group[i].move(); // 이 부분에서 에러가 남. 왜냐하면 지금 group 객체 안에 있는 각각의 참조 변수, 즉 리모콘은 Object 형 참조변수임. 그래서 move 메서드를 이 참조변수들이 사용할 수가 없음. 사용하려면 형변환을 하던가 해야함.
+    }
+    ```
+
+    
+
+## 7-33,34 추상클래스의 작성(2)
+
+추상 클래스를 왜 쓰냐?
+
+1. 관리가 용이해진다.
+
+2. 한번 만들고 나면 쉽게 작성할 수 있다.
+3. 중복도 제거
+4. 변경도 쉬움. ==> 이건 추상 클래스를 여러 버전으로 쪼개나눴을 때 더 와닿는 장점인듯!
+
+
+
+- 추상화(불명확, 구체적이지 않음) <==> 구체화 (명확, 구체적인것)
+
+  무조건 구체화, 즉 명확한 게 좋은 것이 아니냐? 라고 생각할 수 있다. 근데 사실 애매하게 하면 피해나갈 구멍이 있기 때문에...ㅎㅅㅎ
+
+  ==> **추상화된 코드는 구체화된 코드보다 유연하다 라는 장점이 있음.** ==> 변경에 유리하다는 소리!
+
+  ```java
+  GragorianCalendar cal = new GregorianCalendar();	// 구체적
+  Calendar cal = Calendar.getInstance();	// 추상적ㅍ
+  ```
+
+  
+
+음... 이건 계속 다시 보자 완벽하게 이해는 못한 듯...?
+
+
+
+## 7-35~37 인터페이스의 선언, 상속, 구현
+
+- **인터페이스(interface) 란? == 추상 메서드의 집합!** 이게 결론임 
+
+  근데 이건 프로그래밍 관점에서 설명하는 거고, 일반적인 의미에서의 인터페이스 의미는 조금 이따가 알게 될 것. + 부수적인 것들(static 메서드, default 메서드, 상수) 근데 부수적인 것들은 진짜 부수적인 것들이니까 추상 메서드에 집중하자!
+
+
+
+- **구현된 것이 전혀 없는 설계도. 껍데기 ( 모든 멤버가 public )** ==> 왜 껍데기야? 추상 메서드 집합이니까! 
+
+  캡슐화.... 다시 한번 보자
+
+  Q. 추상 클래스와 인터페이스의 차이가 뭐냐? 라는 면접 질문이 나오기도 함
+
+  A. 추상 클래스는 일반 클래스 이지만 추상 메서드를 가지고 있는 것임. 그 외에 생성자, iv 등등 있음
+
+  ​	반면 인터페이스는 완전히 아무것도 없는, 추상 메서드만 가지고 있는 것임. 인터페이스는 iv 생성자 	못 갖는 다.
+
+  ​	이게 핵심임.
+
+  ​	추상 클래스는 일부가 미완성이고, 인터페이스는 ㄹㅇ 아무것도 없는 것이다!
+
+  ​	정팔각형의 모형에서 속에는 iv 가 있고, 그걸 둘러싼 두꺼운 껍질은 메서드. 그리고 그 두꺼운 껍질	의 표피가 추상 메서드라고 생각하면 된다.
+
+  ```java
+  interface 인터페이스이름{
+    	public static final 타입 상수이름 = 값;	// 상수, 클래스처럼 변수는 안된다! iv, cv 불가능!
+    	public abstract 메서드이름(매개변수목록);	// 추상메서드
+  }
+  // 모든 인터페이스의 멤버는 public 이다. 이게 기본임.
+  ```
+
+  ```java
+  interface PlayingCard {
+    // 상수
+    public static final int SPADE = 4;
+    final int DIAMOND = 3;	// public static final int DIAMOND = 3;
+    static int HEART = 2;		// public static final int HEART = 2;		
+    int CLOVER = 1;					// public static final int CLOVER = 1;
+    
+    // 추상 메서드
+    public abstract String getCardNumber();
+    String getCardKind();	// public abstract String getCardKing(); 이어야 하지만, 인터페이스는 원래 모든 메서드가 public 이자 abstract 이기 때문에 생략이 가능하다.
+  }
+  ```
+
+
+
+- 인터페이스의 조상은 인터페이스만 가능 ( Object 가 최고 조상이 아님! )
+
+- 인터페이스는 다중 상속이 가능( 추상메서드는 충돌해도 문제 없음, 왜냐하면 전에 충돌이 문제라고 했던 이유는 메서드의 선언부는 같은 데 구현부가 달라서 충돌이 생기던 거임. 하지만 추상 메서드 이기 때문에 선언부만 있고 구현부가 없음 ==> 충돌 날 일이 없다! )
+
+  ```java
+  interface Fightable extends Movable, Attackable {}	// 2개
+  
+  interface Movable {
+    /** 지정된 위치로 (x,y) 로 이동하는 기능의 메서드 */
+      void move(int x, int y); 
+  }
+  
+  interface Attackable{
+    /** 지정된 대상(u) 를 공격하는 기능의 메서드 */
+    void attack(Unit u);
+  }
+  ```
+
+
+
+- 인터페이스의 구현이란? ( 미완성 설계도니까 완성을 해서 써야 한다. 즉 설계도를 완성 시키는 것을 구현이라고 한다! )
+
+  ==> 인터페이스에 정의된 추상 메서드를 완성하는 것!
+
+  ```java
+  class 클래스이름 implements 인터페이스이름{
+    //	인터페이스에 정의된 추상메서드를 모두 구현해야 한다.
+  }
+  
+  interface Fightable {
+    void move(int x, int y);	// public abstract 생략
+    void attack(Unit u);	// 위와 동일
+  }
+  
+  class Fighter implements Fightable{ // 이렇게 하면 Fighter클래스느 Fightable 인터페이스를 구현했다.
+    public void move(int x, int y){ /*내용 생략 */}
+    public void attack(Unit u){/*내용 생략 */}
+  }
+  
+  //일부만 구현하는 경우, 클래스 앞에 abstract를 붙여야 함.
+  abstract class Fighter implements Fightable{
+    public void move(int x, int y) {/*내용 생략 */}
+    // public abstract void attack(Unit u)
+  }
+  ```
+
+
+
+- Q. 인터페이스란?
+
+  A. 추상메서드의 집합. + 상수, static 메서드, 디폴트 메서드.
+
+- Q. 인터페이스의 구현이란?
+
+  A. 인터페이스의 추상메서드 몸통{} 만들기 ( 미완성 설계도 구현하기 )
+
+  ```java
+  class AudioPlayer extends Player{	// 추상 클래스 구현!
+    void play(int pos) {/*내용 생략 */}
+    void stop(){/*내용 생략 */}
+  }
+  
+  class Fighter implements Fightable{	// 인터페이스 구현!
+    public void move(int x, int y){/*내용 생략 */}
+    public void attack(Unit u){/*내용 생략 */}
+  }
+  ```
+
+
+
+- Q. 추상 클래스와 인터페이스의 공통점은?
+
+  A. 추상 메서드를 가지고 있다. (미완성 설계도)
+
+- Q. 추상 클래스와 인터페이스의 차이점은?
+
+  A. 멤버 변수의 유무. 
+
+  명품답. 인터페이스는 iv 를 가질 수 없다.
+
+  ```java
+  abstract class Player{
+    boolean pause; 	// iv
+    int currentPos;	// iv
+    
+    Player(){	// 생성자
+      /*내용 생략 */
+    }
+    
+    abstract void play(int pos);	// 추상 메서드
+    
+    abstract void stop();					// 추상 메서드
+    
+    void play(){									
+      play(currentPos);	// 추상 메서드 사용할 수 있다.
+    }
+  }
+  // 위를 보면 추상클래스는 추상 메서드 뿐만 아니라 iv 도 가지고 있다.
+  // 하지만 반면 인터페이스는 iv 를 가질 수 없기에 추상 메서드만 가지고 있다.
+  
+  interface Fightable{
+    void move(int x, int y);
+    void attack(Unit u);
+  }
+  ```
+
+  
+
+## 7-38 인터페이스와 다형성
+
+- 인터페이스도 다형성이 통함!
+
+- 인터페이스도 구현 클래스의 부모? Yes , 근데 엄밀히 말하면 부모가 아님. 부모라는 개념은 클래스만 되니까!
+
+  ```java
+  class Fighter extends Unit implements Fightable{
+    public void move(int x, int y){ /*내용 생략 */ }
+    public void attack(){ /*내용 생략 */ }
+  }
+  
+  interface Fightable{
+    void move(int x, int y);
+    void attack(Fightable f);	// 매개변수의 타입이 인터페이스인 경우!!!! Fightable 인터페이스를 구현한 클래스의 인스턴스만 가능하다라는 의미!
+  }
+  
+  Unit u = new Fighter();
+  Fightable f = new Fighter();
+  // 개 신기하네. 대신 Fightable 인터페이스에 선언된 메서드만 사용 가능. 
+  // f.move(1,2)
+  // f.attack(new Fighter()) 이렇게!
+  ```
+
+
+
+- 인터페이스를 메서드의 리턴타입으로 지정할 수 있다.
+
+  ```java
+  Fightable method(){	// 보면 method() 의 리턴타입을 인터페이스 Fightable 로 지정함. 이 말은 Fightable 인터페이스를 구현한 클래스의 인스턴스를 반환한다는 말임.
+     /*내용 생략 */ 
+    // Figther f = new Fighter();
+    // return f;	
+    return new Fighter();	
+  }
+  
+  //그래서 
+  Fightable f = method(); // 인걸
+  Fightable f = new Fighter(); // 라고 써도 된다.
+  
+  class Fighter extends Unit implements Fightable{
+    public void move(int x, int y) { /*내용 생략 */ }
+    public void attack(Fightable f) { /*내용 생략 */ }
+  }
+  ```
+
+  
+
+- 어떤 메서드의 반환 타입이 인터페이스다? 
+
+  그러면 이 인터페이스를 구현한 클래스의 인스턴스를 반환해준다 라는 의미이다! 
+
+  그리고 이렇게 되면 이러한 인스턴스를 받는 쪽, 즉 참조 변수의 타입을 메서드의 반환 타입의 참조변수로 받아야 한다!
+
+  ```java
+  Fightable method(){
+    return new Fighter();
+  }
+  
+  Fightable f = method() // 이렇게 해야 한다.
+  ```
+
+  (말이 어렵네...)
 
