@@ -1,28 +1,41 @@
 package ch7;
 
-class Point {
-    int x;
-    int y;
+class InheritanceTv {
+    boolean power;
+    int channel;
+
+    void power() {
+        System.out.println("this is from InheritanceTv");
+    }
+
+    void channelUp(){
+        channel++;
+    }
+
+    void channelDown(){
+        channel--;
+    }
 }
 
-// class Circle extends Point{ // 상속
-//    int r;
-//}
+class InheritanceDVD{
+    void power(){
+        System.out.println("this is from InheritacneDVD");
+    };
 
-class Circle {
-//    Point p = new Point();
-    int r;
-    Point p;
-    Circle(){
-        p = new Point();
+}
+
+class InheritanceTvDVD extends InheritanceTv{
+    InheritanceDVD Id = new InheritanceDVD();
+
+    void power(){
+        Id.power();
     }
 }
 
 public class InheritanceTest {
     public static void main(String[] args) {
-        Circle c = new Circle();
-        Circle c2 = new Circle();
-        System.out.println(c.toString());
-        System.out.println(c2);
+        InheritanceTvDVD t1 = new InheritanceTvDVD();
+        System.out.println(t1.toString());
+        t1.power();
     }
 }

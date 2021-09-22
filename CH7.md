@@ -23,7 +23,7 @@ class Child extends Parent{	// 이때 Child 와 Parent 클래스는 상속관계
 
 
 - 자손은 조상의 모든 멤버를 상속받는다. (생성자, 초기화 블럭 제외) ==> 조상이라고 칭하는 이유는 부모의 부모까지 다 포함해서 상속을 받기 때문에!!
-- 따라서 자손의 멤버 개수는 조상보다 적을 수 밖에 없다. (자식 <= 조상)
+- 따라서 자손의 멤버 갯수는 항상 조상의 멤버 갯수보다 같거나 많다. (자식의 멤버 갯수 >= 조상의 멤버 갯수)
 
 ```java
 class Parent{	// 멤버 1개
@@ -82,7 +82,7 @@ class Point3D extends Point{	// Point 클래스와 상속관계 ==> Point 클래
 
 ## 7-3 포함 관계
 
-** 클래스의 관계를 크게 2가지로 나눈다. (물론 세부적으로 나누라고 하면 더 있긴 함)
+**클래스의 관계는 크게 2가지로 나눈다. (물론 세부적으로 나누라고 하면 더 있긴 함)
 
 1. 상속
 
@@ -100,7 +100,7 @@ class Point3D extends Point{	// Point 클래스와 상속관계 ==> Point 클래
 class Circle {
     int x;
     int y;
-    int z;
+    int z; 
 }
 
 // 2
@@ -115,11 +115,22 @@ class Circle {
 }
 ```
 
+- 위 코드블록에서 마지막 포함관계의 경우 
+
+  |   c   | 0x100 |      |
+  | :---: | :---: | :--: |
+  | 0x100 | Null  |  p   |
+  |       |   0   |  r   |
+
+  먼저 이렇게 p에 null 로 자동 초기화가 되고, 그 다음에 new Point() 가 실행되면서 새롭게 객체가 생성됨. 말이 좀 이상할 수도 있는 데, 그 객체 생성 될때 일일히 그려서 주소 넣고 하는거 설명하는 거임. 모르겠으면 유튭 ㄲ
+
+  
+
 - 이렇게 했을 때 
 
 <img src="C:\Users\xpmxf\Desktop\asd.png" alt="asd" style="zoom:75%;" />
 
-오른쪽과 같이 클래스를 포함관계로 선언하면 iv 접근을 다음과 같이 해야한다. ( 객체안에 객체 느낌! )
+오른쪽과 같이 클래스를 포함관계로 선언하면 iv 접근을 다음과 같이 해야한다. ( 객체안에 객체 느낌! ==> 아마 이게 맞는 듯 )
 
 ```java
 Circle circle = new Circle();
@@ -129,9 +140,13 @@ circle.c.y;	// y좌표
 circle.r	// 반지름
 ```
 
+ 
 
+- 작은 단위의 클래스를 만들고, 이 들을 조합해서 클래스를 만든다. 
 
-주로 쓰는 포함관계의 예시)
+  이렇게 함으로써 
+
+  주로 쓰는 포함관계의 예시)
 
 ```java
 class Car{
@@ -167,9 +182,11 @@ class Circle extends Point{
 
 이렇게 보면 논리적으로 (1) 이 맞다. 그래서 **포함**
 
-근데 보통 대부분 포함관계라고 한다.
+상속을 하게 되면 제약이 되게 많이 생기기 때문에, 그냥 왼만하면 포함으로 하는 게 좋다!
 
 
+
+**프로그래밍이란? == 설계 + 코딩**
 
 ## 7-5,6 단일 상속, Object 클래스
 
@@ -177,7 +194,7 @@ class Circle extends Point{
 
 - 단일상속이란?
 
-  : 하나의 부모만 상속
+  : 하나의 부모만 상속받는 것을 말한다.
 
   ```java
   classs TvDVD extends Tv,DVD { // 이렇게 상속 한번에 여러 개 받는 거 안됨!!
@@ -198,7 +215,7 @@ class Circle extends Point{
       void power();
   }
   
-  class TvDVD extends Tv, DVD{
+  class TvDVD extends Tv, DVD{	// c++ 은 다중상속 허용!
       //...
   }
   
@@ -206,10 +223,10 @@ class Circle extends Point{
   // 이게 2 개의 클래스니까 안 그럴수도 있다고 생각할 수 있지만, 상속을 여러개에서 받으면 잘 터짐
   ```
 
-  이를 해결하려면 비중이 높은 클래스 하나만 상속관계로, 나머지는 포함관계로 하면 된다!
+  이를 해결하려면 **비중이 높은 클래스 하나만 상속관계**로, 나머지는 포함관계로 하면 된다!
 
   ```java
-  class Tv{
+  class Tv
      boolean power;
      int channel;
      
@@ -327,7 +344,7 @@ class Point3D extends Point{
 
 - 오버라이딩의 조건
 
-  1. 선언부가 조상 클래스의 메서드와 일치해야 한다.
+  1. 선언부가 조상 클래스의 메서드와 일치해야 한다. 
 
      ```java
      class Point {
@@ -340,20 +357,22 @@ class Point3D extends Point{
      }
      ```
 
+     선언은 그대로, 안에 내용만 변경이 가능하다!
+
      
 
-  2. 접근 제어자를 조상 클래스의 메서드보다 좁은 범위로 변경할 수 없다.
+  2. 접근 제어자를 조상 클래스의 메서드보다 좁은 범위로 변경할 수 없다. 
 
      접근 제어자란? ==> public, protected, (default), private  
 
-     접근 제어자 지금 모르는 건 ㄱㅊ음.
+      접근 제어자 지금 모르는 건 ㄱㅊ음.	==> 복습하는 시점인데 까먹음... ^^*
 
      하지만 2번 항목을 외워는 두자!
 
      
 
   3. 예외는 조상 클래스의 메서드보다 많이 선언할 수 없다.
-
+  
      ```java
      class Parent{
          void parentMethod() throws IOException, SQLException{
@@ -380,8 +399,10 @@ class Point3D extends Point{
 
   오버로딩(Overloading) : 기존에 없는 새로운 메서드를 정의하는 것 (new) ==> 상속과 연관이 없음!
 
-  오버라이딩(Overriding) : 상복받은 메서드의 내용을 변경하는 것 (change, modify) ==> 상속과 연관 있음!
+  ​										이름이 같은 데 매개변수의 갯수 or 타입이 다른 거.
 
+  오버라이딩(Overriding) : 상복받은 메서드의 내용을 변경하는 것 (change, modify) ==> 상속과 연관 있음!
+  
   ```java
   class Parent {
       void parentMethod() {}
@@ -396,12 +417,12 @@ class Point3D extends Point{
       void childMethod() {}			// **** 오버로딩이라고 했는 데, 그냥 중복정의임 ==> 에러임!
   }
   ```
-
+  
   
 
 ## 7-10~11 참조변수 super, 생성자 super() ==> 이번 단원 중요!
 
-- super 란?  ≒ this , this 는 lv 와 iv 구별할 때 사용
+- super 란?  ≒ this , this 는 lv 와 iv 구별할 때 사용한다.
 
   : 객체 자신을 가리키는 참조변수. 인스턴스 메서드(생성자) 내에만 존재 ==> static 메서드 내에서 사용 불가\
 
@@ -430,11 +451,19 @@ class Child extends Parent{
 
 ​	: 즉, 상속이 될 때 변수의 이름이 같아도 상속은 잘 된다. 구분을 super 와 this 로 함!
 
+| c ---> |  0x100   |                        |
+| :----: | :------: | :--------------------: |
+|        |    10    | x 얘는 super.x 로 구별 |
+|        |    20    | x 얘는 this.x 로 구별  |
+|        | method() |                        |
+
+
+
 
 
 -  super() - **조상의 생성자**, 참조변수 super 와는 아얘 다른 것!
 
-  : 조상의 생성자를 호출할 때 사용 ==>  ∵ 상속 받을 때 코드블럭하고 생성자는 상속되지 않음!
+  : 조상의 생성자를 호출할 때 사용 ==>  ∵ 상속 받을 때 **코드블럭하고 생성자는 상속되지 않음!**
 
   : 조상의 멤버는 조상의 생성자를 호출해서 초기화.
 
@@ -478,6 +507,8 @@ class Point{
     int y;
 
     Point(int x, int y){
+      	// 여기에 super() 나 this() 가 없어서, 컴파일러가 super() 를 강제로 삽입시킴
+     		// 이 경우에는 Object() 가 알아서 넣어짐.
         this.x = x;
         this.y = y;
     }
@@ -491,10 +522,10 @@ class Point3D extends Point4{
     int z;
 
     Point3D(int x, int y, int z){
-        // 여기에 원래 생성자가 있어야 한다. 하지만 없어서 컴파일러가 대신 super() 를 넣어줌. 근데 여기서 super() == Point() 인데, Point 클래스에는 기본 생성자가 없고 두 개의 int 를 받는 생성자만 존재함. 그래서 super() 는 없는 생성자를 호출하는 것이 됨으로 에러임!!!
+        // 여기에 원래 생성자가 있어야 한다. 하지만 없어서 컴파일러가 대신 super() 를 넣어줌. 근데 여기서 super() == Point() 인데, Point 클래스에는 기본 생성자가 없고 두 개의 int 를 받는 생성자만 존재함. 그래서 super() 는 없는 생성자를 호출하는 거라 에러가 됨!!!
         // 그래서 항상 기본 생성자를 넣으라는 규칙을 외워야 한다!!!!!!!!!!!!!!!!!
         this.x = x;
-        this.y = y;
+        this.y = y; 
         this.z = z;
     }
 
@@ -533,12 +564,12 @@ Point3D(int x, int y, int z){
 
   : 클래스의 실제 이름(full name)은 패키지를 포함.(java.lang.String)
 
-  : rt.jar 는 클래스들을 압축한 파일 ( JDK 설치 경로\jre\lib 에 위치 ) ==> Java9 부터 사라짐 (∵ rt.jar 파일이 너무 큼, module 개념이 나오면서 module 로 쪼개놓음 )
+  : rt.jar 는 클래스들을 압축한 파일 ( JDK 설치 경로\jre\lib 에 위치 ) ==> Java9 부터 사라짐 (∵ rt.jar 파일이 너무 큼, module 개념이 나오면서 작은 module 들로 쪼개놓음 )
 
   여기서 rt 는 runtime(실행할 때, 실행중), 자바 실행시에 필요한 클래스들의 모음이 rt.jar(클래스 파일 묶어놓은 것) 이다
-
-
-
+  
+  
+  
 - 패키지의 선언
 
   : 패키지는 소스파일의 첫 번째 문장으로 단 한번 선언
@@ -548,6 +579,7 @@ Point3D(int x, int y, int z){
   : 패키지 선언이 없으면 이름없는 (unnamed) 패키지에 속하게 된다.
 
   ```java
+  // PackageTest.java
   package com.codechobo.book;
   
   public class packageTest{
@@ -559,7 +591,9 @@ Point3D(int x, int y, int z){
   class PackageTest2{}
   ```
 
+  이 클래스를 컴파일하게 되면 com 폴더 아래, codechobo 폴더 아래, book 폴더 아래 packageTest.class 가 위치하게 된다.
 
+  
 
 - 클래스 패스(classpath)
 
@@ -567,11 +601,19 @@ Point3D(int x, int y, int z){
 
   : 환경변수 classpath 로 관리하며, 경로간의 구분자는 ' ; ' 를 상요
 
-  : classpath(환경변수) 에 패키기의 루트를 등록해서 사용 가능함
+  : classpath(환경변수) 에 패키지의 루트를 등록해서 사용 가능함
+
+  환경변수에 넣어두면, 터미널에서 
+
+  ```java
+  java com.codechobo.book.PackageTest
+  ```
+
+  라고 했을 때, 환경변수를 먼저 뒤져본다. 그래서 위의 스크립트가 잘 실행됨!
 
   : 제어판에서 환경변수 편집하기!! ==> 우리가 지금까지 IntelliJ 가 알아서 다 해줬지만, 알아서 이렇게 다 할줄 알아야 한다.
 
-
+  
 
 ## 7-15~16 import 문, static import 문
 
@@ -587,13 +629,13 @@ Point3D(int x, int y, int z){
   import java.util.Date;
   
   class ImportTest{
-      Date today = new Date();
+      Date today  = new Date();
   }
   ```
 
   
 
-- java.lang 패키지의 클래스는 import 하지 않고도 사용할 수 있다.
+- java.lang 패키지는 기본 패키지라서 java.lang 의 클래스들은 import 하지 않고도 사용할 수 있다.
 
   String, Object, System, Thread ...
 
@@ -697,8 +739,8 @@ Point3D(int x, int y, int z){
   ```
 
   ```java
-  import static java.lang.System.out;
-  import static java.lang.Math.*;
+  import static java.lang.System.out;	// out 이라는 객체를 사용할 수 있게 되는 거랑 느낌 비슷 ( out 은 System 클래스에서 static 멤버임. 나중에 15장에서 이 내용 다룰 것!)
+  import static java.lang.Math.*;			// Math 클래스의 모든 static 멤버를 변수처럼 쓸수 있게됨
   
   class Ex7_6{
       public static void main(String[] args){
@@ -721,15 +763,15 @@ Point3D(int x, int y, int z){
 
 - 클래스와 클래스의 멤버(멤버 변수, 메서드) 에 부가적인 의미 부여
 
-  : 제어자를 쉽게 생각하면 형용사라고 생각하면 된다.
+  : 제어자를 쉽게 생각하면 **형용사**라고 생각하면 된다.
 
   : 형용사 +(->) 명사
 
-  1. **접근 제어자**
+  1. **접근 제어자 ( 4개 중 하나만 붙일 수 있음 )**
 
      **: public, protected, (default), private**
 
-  2. 그 외
+  2. 그 외 
 
      : **static, final, abstract,** native, transient, synchronized, volatile, strictfp
 
@@ -761,7 +803,7 @@ Point3D(int x, int y, int z){
 
   ```java
   class StaticTest{
-    static int width = 200;
+    static int width = 200;	// 간단 초기화
     static int height = 120;
     
     static {		// 클래스 초기화 블럭
@@ -771,7 +813,7 @@ Point3D(int x, int y, int z){
     static int max(int a, int b){ //클래스 메서드(static 메서드)
       // iv 사용 불가능
       // im 사용 불가능
-      // ==> 인스턴스 멤버들을 사용할 수 없다.
+      // ==> 인스턴스 멤버들을 사용할 수  없다.
       return a>b? a:b;
     }
   }
@@ -787,8 +829,8 @@ Point3D(int x, int y, int z){
 
   |   대상    |                             의미                             |
   | :-------: | :----------------------------------------------------------: |
-  |  클래스   | 변경될 수 없는 클래스, 확장될 수 없는 클래스가 된다.<br />그래서 final로 지정된 클래스는 다른 클래스의 조상이 될 수 없다.<br />Ex) String(보안 문제 때문에 final, 패스워드 같은 경우 문자열로 저장할 수도 있는데, 이게 상속이 가능하면 자식에서 조회가 가능하기 때문에 밴) , Math(static 메서드 집합이니까 굳이 이 클래스를 상속받아 쓸 일이 없어서) |
-  |  메서드   | 변경될 수 없는 메서드. <br />final로 지정된 메서드는 오버라이딩을 통해 재정의 될 수 없다. |
+  |  클래스   | 변경될 수 없는 클래스, 확장될 수 없는 클래스가 된다.<br />그래서 final로 지정된 클래스는 다른 클래스의 조상이 될 수 없다.<br />Ex) String - 보안 문제 때문에 final, 패스워드 같은 경우 문자열로 저장할 수도 있는데, 이게 상속이 가능하면 자식에서 조회가 가능하기 때문에 밴 <br />Math - static 메서드 집합이니까 굳이 이 클래스를 상속받아 쓸 일이 없어서 |
+  |  메서드   |      변경될 수 없는 메서드. <br />오버라이딩이 안 된다!      |
   | 멤버 변수 |  변수 앞에 final이 붙으면, 값을 변경할 수 없는 상수가 된다.  |
   | 지역변수  |  변수 앞에 final이 붙으면, 값을 변경할 수 없는 상수가 된다.  |
 
@@ -827,7 +869,7 @@ Point3D(int x, int y, int z){
 
 
 
-## 7-12 접근 제어자(access modifier)
+## 7-21 접근 제어자(access modifier)
 
 1. private : 같은 클래스 내에서만 접근이 가능하다
 2. (default) : 같은 패키지 내에서만 접근이 가능하다.
@@ -836,12 +878,14 @@ Point3D(int x, int y, int z){
 
 이 중 한개만 가능하다! 
 
-|  제어자   | 같은 클래스 | 같은 패키지 | 자손 클래스 | 전체 |
-| :-------: | :---------: | :---------: | :---------: | :--: |
-|  public   |      O      |      O      |      O      |  O   |
-| protected |      O      |      O      |      O      |  X   |
-| (default) |      O      |      O      |      X      |  X   |
-|  private  |      O      |      X      |      X      |  X   |
+|     접근 제어자      | 같은 클래스 | 같은 패키지 | 자손 클래스 | 전체 |
+| :------------------: | :---------: | :---------: | :---------: | :--: |
+|  public (클래스 o)   |      O      |      O      |      O      |  O   |
+| protected (클래스 x) |      O      |      O      |      O      |  X   |
+| (default) (클래스 o) |      O      |      O      |      X      |  X   |
+|  private (클래스 x)  |      O      |      X      |      X      |  X   |
+
+
 
 ```java
 접근제한 없음						 같은 패키지+자손						    같은 패키지								 같은 클래스
@@ -850,7 +894,7 @@ public ========================> protected ========================> (default) =
 
 <img src="C:\Users\xpmxf\AppData\Roaming\Typora\typora-user-images\image-20210831170809636.png" alt="image-20210831170809636" style="zoom:50%;" />
 
-
+ 
 
 
 
@@ -895,7 +939,7 @@ t.setHour(11); // t 의 hour 가 11로 세팅이 됨
 
 2. 외부에는 불필요한, 내부적으로만 사용되는, 부분을 감추기 위해서!
 
-   : 접근 제어자는 좁을 수록 좋다!
+   : **접근 제어자는 좁을 수록 좋다!**
 
 ```java
 class Time{
@@ -933,7 +977,7 @@ public class TimeTest {
 
 
 
-## 7-23 다형성(polymorphism) - 개 중요, 
+## 7-23 다형성(polymorphism) - 개 중요
 
 ##### 이걸 이해 못하면 뒤에 나오는 추상 클래스 등 뒤의 진도를 할 필요가 없다!!! 매우 중요!
 
@@ -958,14 +1002,14 @@ public class TimeTest {
       void caption();
   }
   
-  Tv t = new SmartTv();	// 이런 게 타입 불일치를 얘기하는 거임!!
+  Tv t = new SmartTv();	// 이런 게 타입 불일치를 얘기하는 거임!! 이것이 바로 다형성 그 자체
   ```
 
   
 
-- 일치하는 게 일반적인데 불일치 할때의 2 가지 장점이 있어서 다형성이 중요하고, 객체지향개념에 유연성을 준다!
+- 일치하는 게 일반적인데 불일치 할때의 2 가지 장점이 있어서 다형성이 중요하고, 객체지향개념에 **유연성**을 준다!
 
-
+  
 
 - 객체와 참조변수의 타입이 일치할 때와 일치하지 않을 때의 차이?
 
@@ -978,7 +1022,7 @@ public class TimeTest {
 
   기능이 7개 있는 데 사용을 2개 안하는 건 ok!
 
-
+  
 
 - 하지만 자손 타입의 참조변수로 부모 타입의 객체를 가리킬 순 없다.
 
@@ -989,7 +1033,7 @@ public class TimeTest {
 
   그런데 기능이 5개 밖에 없는 데 5개에 없는 기능을 사용하려고 하면 그건 Trouble!
 
-
+  
 
 - Q. 참조변수의 타입은 인스턴스의 타입과 반드시 일치해야 하나요?
 
@@ -1023,7 +1067,7 @@ public class TimeTest {
 
 ## 7-24,25 참조변수의 형변환 (1)
 
-- 결론 ! : 사용할 수 있는 멤버의 갯수를 조절하는 것!!
+- **사용할 수 있는 멤버의 갯수를 조절하는 것!!**
 
   ==> 주소값, 참조변수 값, 객체 이런 거 하나도 안 바뀜!
 

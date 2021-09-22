@@ -1,10 +1,10 @@
-package pkg1;
+package pkg1;   // pgk1 폴더
 
 public class MyParent {
-    private int prv;    // 같은 클래스
-    int dft;            // 같은 패키지
-    protected  int prt; // 같은 패키지 + 자손
-    public int pub;     // 접근 제한 없음.
+    private     int prv;    // 같은 클래스
+                int dft;    // 같은 패키지
+    protected   int prt;    // 같은 패키지 + 자손(다른 패키지)
+    public      int pub;    // 접근제한 없음
 
     public void printMembers(){
         System.out.println(prv);
@@ -17,9 +17,11 @@ public class MyParent {
  class MyParentTest {
     public static void main(String[] args) {
         MyParent p = new MyParent();
-//        System.out.println(p.prv);  // 에러.
-        System.out.println(p.dft);  //  ok
-        System.out.println(p.prt);  //  ok
-        System.out.println(p.pub);  //  ok
+//        System.out.println(p.prv);  // 에러
+        System.out.println(p.dft);  // ok
+        System.out.println(p.prt);  // ok
+        System.out.println(p.pub);  // ok
+
+        p.printMembers();
     }
 }
