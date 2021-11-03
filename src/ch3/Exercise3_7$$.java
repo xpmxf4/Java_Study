@@ -7,12 +7,14 @@ package ch3;
 class Exercise3_7$$ {
     public static void main(String[] args) {
         int fahrenheit = 100;
-//        float celcius = 5 /(float) 9 * (fahrenheit - 32);
-        float celcius = (int) (5 / 9f * (fahrenheit - 32) * 100 + 0.5) / 100f;
+        float celcius = 5 /(float) 9 * (fahrenheit - 32);
+//        float celcius = (int) (5 / 9f * (fahrenheit - 32) * 100 + 0.5) / 100f;
 
 
         System.out.println("Fahrenheit:"+fahrenheit);
         System.out.println("Celcius:"+celcius);
-//        System.out.printf("Celcius : %5.2f", celcius);
+        System.out.printf("Celcius : %2.2f", celcius); // 이렇게 하면 소수 3 번째 자리에서 반올림 일어나서
+                                                       // 원하는 결과가 나오게 된다.
+
     }
 }

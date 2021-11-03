@@ -1,70 +1,67 @@
 package ch7;
 
-class Product2{
-    int price;
-    int bonusPoint;
-    Product2(){}
-    Product2(int price){
-        this.price = price;
-        this.bonusPoint = (int) (price / 10.0);
-    }
-}
-class Tv2 extends Product2{
-    Tv2(){
-        super(100);
-    }
+class Buyer9 {
+    int money = 10000;
+    Product9[] list = new Product9[10];
 
-    public String toString(){
-        return "Tv2";
-    }
-}
-class Computer2 extends Product2{
-    Computer2(){
-        super(200);
-    }
-
-    public String toString(){
-        return "Computer";
-    }
-}
-class Buyer2{
-    int money = 1000;
-    int bonusPoint = 0;
-
-    Product2[] cart = new Product2[10];
-    int i = 0;  // 이게 void 안에 있어도 상관없나?
-
-    void buy(Product2 p) {
+    int index = 0;
+    void buy(Product9 p) {
         if (money < p.price) {
-            System.out.println("잔액부족입니다");
+            System.out.println("돈이 부족해" + p + "를 구입할 수 없습니다.");
             return;
         }
+
         money -= p.price;
-        bonusPoint += p.bonusPoint;
-        cart[i++] = p;
+        list[index++] = p;
     }
 
     void summary(){
-        int sum = 0;
-        String receipt = "";
-        for (int i = 0; i < cart.length; i++) {
-            if(cart[i] == null) break;  // 이걸 return 으로 써서 summary() 가 끝나버림 ㄸ
-            receipt += cart[i] + ", ";
-            sum += cart[i].price;
+        System.out.println("현재 남은 돈은 " + this.money + "입니다!");
+        System.out.println("지금까지 구매한 목록입니다!");
+        for (int i = 0; i < list.length; i++) {
+            if(list[i] == null) break;
+            System.out.println(list[i]);
         }
-        System.out.println(receipt + "가 지금까지 산 상품 목록입니다!");
-        System.out.println("그리고 지금까지 카트에 담은 상품들이 합은 " + sum + " 입니다!");
+    }
+}
+
+class Product9 {
+    String name;
+    int price;
+
+    Product9(){}
+
+    Product9(int price, String name){
+        this.name = name;
+        this.price = price;
+    }
+
+    public String toString() {
+        return this.name;
+    }
+}
+
+class Tv9 extends Product9{
+    Tv9(){
+        super(100, "TV");
+    }
+}
+
+class Computer9 extends Product9{
+    Computer9(){
+        super(200, "Computer");
     }
 }
 
 public class Ex7_9 {
     public static void main(String[] args) {
-        Buyer2 b = new Buyer2();
-        Tv2 t = new Tv2();
-        Computer2 c = new Computer2();
+        Buyer9 b = new Buyer9();
+        b.buy(new Tv9());
+        b.buy(new Tv9());
+        b.buy(new Tv9());
+        b.buy(new Computer9());
+        b.buy(new Computer9());
 
-        b.buy(t);
-        b.buy(c);
         b.summary();
     }
 }

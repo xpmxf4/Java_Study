@@ -19,7 +19,7 @@ class Exercise3_8$$ {
         char ch = 'A';
         ch = (char) (ch + 2);                   // ch + 2 는 int 값 -> ch에 할당 못함
 
-        float f = 3 / 2f;                       // f 붙여야 됨1
+        float f = 3 / 2f;                        // f 붙여야 됨1
         long l = 3000 * 3000 * 3000L;           // L 붙여야 됨
 
         float f2 = 0.1f;

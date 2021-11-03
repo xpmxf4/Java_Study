@@ -1,36 +1,49 @@
 package ch7;
 
-abstract class Unit{
-    int x,y;
+abstract class Unit {
+    int x, y;
+
     abstract void move(int x, int y);
-    void stop() {
-        System.out.println("멈춥니다");
+
+    void stop(){
+        System.out.println("멈춰");
     }
 }
 
 interface Fightable{
-    void move(int x, int y);    //public abstract 생략
-    void attack(Fightable f);   //public abstract 생략
+    void move(int x, int y);
+
+    void attack(Fightable fightable);
 }
 
-class Fighter extends Unit implements Fightable{
-    public void move(int x, int y){ // 오버라이딩 할때 조상보다 접근 제어자가 좁으면 안됨. Fightable 에서 move, attack 은 public이였음!
-        System.out.println("[" + x + "," + y + "]로 이동");
+class Fighter extends Unit implements Fightable {
+    public void move(int x, int y) {
+        System.out.printf("%d, %d 만큼 이동\n", x, y);
     }
-    public void attack(Fightable f){
-        System.out.println(f+"를 공격");
+
+    public void attack(Fightable f) {
+        System.out.println(f + "를 공격");
     }
-    //싸울 수 있는 상대 불러오기
+
+    // 싸울 수 있는 상대를 불러온다.
     Fightable getFightable(){
-        return new Fighter();   // Fighter 를 생성해서 반환
-    }
+        Fighter f = new Fighter();
+        return (Fightable) f;
+   }
 }
 
 public class FighterTest {
     public static void main(String[] args) {
+//        Fighter f1 = new Fighter();
+        Unit u = new Fighter();
+        Fightable f1 = new Fighter();
         Fighter f = new Fighter();
+
         Fightable f2 = f.getFightable();
-
-
+//        f2.stop();  // 위에서 return 타입이 Fightable 이라, f2.stop() 이 되지 않는다!
+                    // 리턴 타입이 인터페이스다? 그 리턴 타입은 인터페이스를 구현한 객체를 리턴한다라는 뜻.
+                    // 왜 리턴 타입을 인터페이스로? 추상화를 위해서! ==> 애매하게 해서 유연함 올리려고!
+        System.out.println(f2);
     }
+
 }

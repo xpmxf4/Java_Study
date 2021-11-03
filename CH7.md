@@ -113,6 +113,8 @@ class Circle {
     Point p = new Point();
     int z;
 }
+
+Circle c = new Circle();
 ```
 
 - 위 코드블록에서 마지막 포함관계의 경우 
@@ -1154,16 +1156,17 @@ public class TimeTest {
 
   : 참조변수의 형변환은 조상 < == > 자손 에서만 가능
 
-  : 형변환 하기 전에 instanceof 연산자를 사용하고 형변환을 한다.
+  1. 먼저 instanceof 로 형변환 확인하기!
+  2. 그리고 나서 형변환 하기!
 
   
 
 - 형변환 전에 반드시 instanceof로 확인해야함!
 
   ```java
-  void doWork(Car c){	// 여기에는 new Car(), new FireEngine(), new Ambulance() 모두 다 들어올 수 있다. 왜? 다형성!!
+  void doWork(Car c){	// 여기에는 new Car(), new FireEngine(), new Ambulance() 모두 다 들어올 수 있다. 왜? 다형성이 되기 때문이다.
     if(c instanceof FireEngine){			// 1. 형변환이 가능한지 확인
-      FireEngine fe = (FireEngine) c;	// 2. 형변환
+      FireEngine fe = (FireEngine) c;	// 2. 형변환, 여기서 (FireEngine) c 를 하는 이유는 바로 밑줄에서 fe.water() 를 했기 때문이다. 만약 하지 않았다면 fe 에 Car 타입인 참조변수 c 리모콘이 할당되어 water() 를 사용할 수 없다!
       fe.water();
     }else if(c instanceof Ambulance){
       Ambulance a = (Ambulance) c;
@@ -1231,15 +1234,15 @@ public class TimeTest {
 
 - 다형성의 장점이란?
 
-  1. **다형성 매개변수** ==> 이번 단원은 이것에 대해 배운다!
+  1. **다형적 매개변수** ==> 이번 단원은 이것에 대해 배운다!
   2. 하나의 배열로 여러 종류 객체 다루기
 
-  이번 강의에서 이 2가지를 배움
+  이번 강에서는 **다형적 매개변수** 를 배울 거
 
 
 
 - 다형성이란?
-  	1. Tv t = new SmartTv();
+  	1. Tv t = new SmartTv(); => 조상 타입의 참조변수로 자손 객체 가르킴.
    	2. 참조변수의 형변환 ==> 리모콘 바꾸기, 왜? 사용할 수 있는 멤버의 갯수 조절
    	3. Instance 연산자 ==> 형변환 가능여부 체크
 
@@ -1302,7 +1305,7 @@ public class TimeTest {
   }
   ```
 
-  매개변수 p 는 Product 타입의 참조변수인데 다형성이라는 특징을 가지기 때문에 매개변수에는 Product 의 자손인 Computer, Audio, Tv 3 가지가 모두 들어갈 수 있다.
+  매개변수 p 는 Product 타입의 참조변수인데 다형성 때문에 매개변수에는 Product 의 자손인 Computer, Audio, Tv 3 가지가 모두 들어갈 수 있다.
 
 
 
@@ -1413,7 +1416,7 @@ public class Ex7_8 {
   // 근데 밑의 코드는 묶어놓은 거고, 위는 안 묶어 놓은 것
   
   Product[] p = new Product[3];	// 이거 그려보자
-  p[0] = new Tv();			// Product 객체만 올수 있을 거 같지만, 다형성 때문에 Product의 자손인 Tv 도 가능함.
+  p[0] = new Tv();							// Product 객체만 올수 있을 거 같지만, 다형성 때문에 Product의 자손인 Tv 도 가능함.
   p[1] = new Computer();
   p[2] = new Audio();
   ```
@@ -1447,9 +1450,9 @@ public class Ex7_8 {
 
   ## 7-34 추상클래스의 작성
 
-  추상 클래스란 ? == 추상 메서드를 가지고 있음
-
-  그렇다면 추상 메서드란? == 몸통, 즉 구현부를 가지고 있지 
+  1. 미완성 설계도임. 미완성 클래스는 미완성 메서드, 즉 **몸통이 없는 메서드를 가지고 있는 클래스.**
+  2. 목적은 다른 클래스 작성에 도움을 주기 위한 것임. 미완성 클래스로는 인스턴스 생성 불가능.
+  3. 상속을 통해 **모든** **추상 메서드**를 완성해야만 인스턴스 생성 가능.
 
   
 
@@ -1537,7 +1540,7 @@ public class Ex7_8 {
 
 2. 한번 만들고 나면 쉽게 작성할 수 있다.
 3. 중복도 제거
-4. 변경도 쉬움. ==> 이건 추상 클래스를 여러 버전으로 쪼개나눴을 때 더 와닿는 장점인듯!
+4. 변경도 쉬움. ==> 추상 클래스를 의미 있는 단계로 쪼개서 진화시키게 되면, 나중에 굳이 최종버전으로 구체화를 하지 않아도 됨. ==> 중간 단계로 만들어버림
 
 
 
@@ -1549,9 +1552,11 @@ public class Ex7_8 {
 
   ```java
   GragorianCalendar cal = new GregorianCalendar();	// 구체적
-  Calendar cal = Calendar.getInstance();	// 추상적ㅍ
+  Calendar cal = Calendar.getInstance();	// Calendar 의 자손객체를 반환. 
   ```
 
+  이거 그레고리안 뭐 이런거 이해못해도, 유연함을 준다 라는 느낌을 가져가면 될 듯.
+  
   
 
 음... 이건 계속 다시 보자 완벽하게 이해는 못한 듯...?
@@ -1566,7 +1571,7 @@ public class Ex7_8 {
 
 
 
-- **구현된 것이 전혀 없는 설계도. 껍데기 ( 모든 멤버가 public )** ==> 왜 껍데기야? 추상 메서드 집합이니까! 
+- **구현된 것이 전혀 없는 설계도. 껍데기 ( 모든 멤버가 public )** ==> 이게 핵심임!!!
 
   캡슐화.... 다시 한번 보자
 
@@ -1574,7 +1579,7 @@ public class Ex7_8 {
 
   A. 추상 클래스는 일반 클래스 이지만 추상 메서드를 가지고 있는 것임. 그 외에 생성자, iv 등등 있음
 
-  ​	반면 인터페이스는 완전히 아무것도 없는, 추상 메서드만 가지고 있는 것임. 인터페이스는 iv 생성자 	못 갖는 다.
+  ​	반면 인터페이스는 완전히 아무것도 없는, 추상 메서드만 가지고 있는 것임. 인터페이스는 iv 나 생성자를 가질 수 없다.
 
   ​	이게 핵심임.
 
@@ -1584,7 +1589,7 @@ public class Ex7_8 {
 
   ```java
   interface 인터페이스이름{
-    	public static final 타입 상수이름 = 값;	// 상수, 클래스처럼 변수는 안된다! iv, cv 불가능!
+    	public static final 타입 상수이름 = 값;	// 상수, 클래스처럼 변수는 안된다! iv, cv 불가능! 그래서 final 임!
     	public abstract 메서드이름(매개변수목록);	// 추상메서드
   }
   // 모든 인터페이스의 멤버는 public 이다. 이게 기본임.
@@ -1608,7 +1613,7 @@ public class Ex7_8 {
 
 - 인터페이스의 조상은 인터페이스만 가능 ( Object 가 최고 조상이 아님! )
 
-- 인터페이스는 다중 상속이 가능( 추상메서드는 충돌해도 문제 없음, 왜냐하면 전에 충돌이 문제라고 했던 이유는 메서드의 선언부는 같은 데 구현부가 달라서 충돌이 생기던 거임. 하지만 추상 메서드 이기 때문에 선언부만 있고 구현부가 없음 ==> 충돌 날 일이 없다! )
+- 인터페이스는 다중 상속이 가능( 추상메서드는 충돌해도 문제 없음, 왜냐하면 전에 충돌이 문제라고 했던 이유는 메서드의 선언부는 같은 데 **구현부가 달라서 충돌이 생기던 거임**. 하지만 추상 메서드 이기 때문에 선언부만 있고 구현부가 없음 ==> 충돌 날 일이 없다! )
 
   ```java
   interface Fightable extends Movable, Attackable {}	// 2개
@@ -1656,7 +1661,7 @@ public class Ex7_8 {
 
 - Q. 인터페이스란?
 
-  A. 추상메서드의 집합. + 상수, static 메서드, 디폴트 메서드.
+  A. **추상메서드의 집합.** + 상수, static 메서드, 디폴트 메서드.
 
 - Q. 인터페이스의 구현이란?
 
@@ -1673,16 +1678,16 @@ public class Ex7_8 {
     public void attack(Unit u){/*내용 생략 */}
   }
   ```
-
-
-
+  
+  
+  
 - Q. 추상 클래스와 인터페이스의 공통점은?
 
   A. 추상 메서드를 가지고 있다. (미완성 설계도)
 
 - Q. 추상 클래스와 인터페이스의 차이점은?
 
-  A. 멤버 변수의 유무. 
+  A. **멤버 변수의 유무**. 
 
   명품답. 인터페이스는 iv 를 가질 수 없다.
 
@@ -1728,7 +1733,7 @@ public class Ex7_8 {
   
   interface Fightable{
     void move(int x, int y);
-    void attack(Fightable f);	// 매개변수의 타입이 인터페이스인 경우!!!! Fightable 인터페이스를 구현한 클래스의 인스턴스만 가능하다라는 의미!
+    void attack(Fightable f);	// 매개변수의 타입이 인터페이스인 경우!!!! Fightable 인터페이스를 구현한 클래스의 인스턴스만 가 능하다라는 의미!
   }
   
   Unit u = new Fighter();
@@ -1777,4 +1782,61 @@ public class Ex7_8 {
   ```
 
   (말이 어렵네...)
+  
+  이건 실습 위주로 다시 한번 해보는 게 더 도움이 될 거다.
 
+
+
+# 7-39 인터페이스의 장점 (1)
+
+- **두 대상(객체) 간의 "연결", "대화", "소통" 을 돕는 "중간 역할"을 한다.**
+
+  interface = inter ( ~사이 ) + face ( 얼굴, 대상 )
+
+  
+
+  기계의 껍데기를 생각하면 된다. ( 실제 하드웨어가 아님 )
+
+  Ex1) 자판기에서 우리는 누르기만 하면 되는 그 판때기
+
+  Ex2) 컴퓨터도 직접 쓰기 힘들다. 그래서 윈도우, 즉 GUI (Graphic User Interface) 라는 것이 나옴.
+
+  ​		여기서 GUI 는 우리 <========> 컴퓨터 간에 연결, 대화, 소통을 해줌.
+
+  
+
+​	여기서 공통점은 중간에 껍데기가 있으면? 
+
+​	=> 하드웨어가 바뀌더라도 우리가 느끼기엔 차이가 없다. 뭐 하나 바뀌었다고 일일히 다 바뀐다? ㄹㅇ 개극혐임.
+
+​	
+
+- 선언(설계) ( == 껍데기 ) 와 구현 ( == 알멩이 ) 을 분리시킬 수 있게 한다.
+
+  ```java
+  class B {
+    public void method(){
+      System.out.println("method in B");
+    }
+  }
+  ```
+
+  위와 같은 클래스를 다음과 같이 분리가 가능하다
+
+  ```java
+  interface I {
+    public void method();
+  }
+  
+  class B implements I {
+    public void method(){
+      System.out.println("method in B");
+    }
+  }
+  ```
+
+  
+
+- 인터페이스 덕분에 B가 변경되어도 A는 안 바꿀 수 있게 된다. (느슨한 결합  )
+
+  A 
