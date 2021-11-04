@@ -1,57 +1,88 @@
 package ch7;
 
-class Buyer {
-    int money = 1000;
-    int bonusPoint = 0;
-
-    void buy(Product p){
-        if(money < p.price){
-            System.out.println("잔액이 부족하여 " + p.name + "를 구입할 수 없음");
-            return;
-        }
-
-        money -= p.price;
-        bonusPoint += p.bonusPoint;
-        System.out.println(p + "를 구입해버림");
-    }
-}
-
 class Product{
-    String name;
     int price;
     int bonusPoint;
 
-    Product(int price, String name){
-        this.name = name;
+    Product(int price) {
         this.price = price;
         this.bonusPoint = price / 10;
     }
-
-    public String toString(){
-        return name;
-    }
-
 }
 
-class Tv1 extends Product{
-    Tv1(){
-        super(100, "Tv");
+class Nintendo extends Product{
+    Nintendo(){
+        super(100);
+    }
+
+    public String toString() {
+        return "Nintendo";
     }
 }
 
 class Computer extends Product{
     Computer(){
-        super(200, "Computer");
+        super(200);
+    }
+    public String toString(){
+        return "Computer";
+    }
+}
+
+class Audio extends Product{
+    Audio(){
+        super(300);
+    }
+    public String toString(){
+        return "Audio";
+    }
+}
+
+class Buyer{
+    private int money = 1000;
+    private int bonusPoint = 0;
+    private Product[] cart = new Product[10];
+    int j = 0 ;
+
+    void buy(Product p) {
+        if (p.price > money) {
+            System.out.println("돈이 부족합니다");
+            return;
+        }
+
+        money -= p.price;
+        bonusPoint += p.bonusPoint;
+        cart[j++] = p;
+        System.out.println(p + "를 구입하셨습니다!");
+    }
+
+    void getMoney(){
+        System.out.println(money);
+    }
+
+    void getBonusPoint(){
+        System.out.println(bonusPoint);
+    }
+
+    void getCart(){
+        for (int i = 0; i < cart.length; i++) {
+            if(cart[i] == null) return;
+            System.out.println(cart[i]);
+        }
     }
 }
 
 public class Ex7_8 {
     public static void main(String[] args) {
         Buyer b = new Buyer();
-        b.buy(new Tv1());
-        b.buy(new Computer());
 
-        System.out.println(b.money + "만큼 돈이 남음");
-        System.out.println(b.bonusPoint + "만큼 보너스 포인트 있음");
+        b.buy(new Nintendo());
+        b.buy(new Computer());
+        b.buy(new Audio());
+
+        b.getBonusPoint();
+        b.getMoney();
+        b.getCart();
+
     }
 }

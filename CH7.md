@@ -576,7 +576,7 @@ Point3D(int x, int y, int z){
 
   : 패키지는 소스파일의 첫 번째 문장으로 단 한번 선언
 
-  : 같은 소스 파일의 클래스들은 코두 같은 패키지에 속하게 된다.
+  : 같은 소스 파일의 클래스들은 모두 같은 패키지에 속하게 된다.
 
   : 패키지 선언이 없으면 이름없는 (unnamed) 패키지에 속하게 된다.
 
@@ -601,7 +601,7 @@ Point3D(int x, int y, int z){
 
   : 클래스 파일(*.class) 의 위치를 알려주는 경로(path)
 
-  : 환경변수 classpath 로 관리하며, 경로간의 구분자는 ' ; ' 를 상요
+  : 환경변수 classpath 로 관리하며, 경로간의 구분자는 ' ; ' 를 사용
 
   : classpath(환경변수) 에 패키지의 루트를 등록해서 사용 가능함
 
@@ -840,9 +840,9 @@ Point3D(int x, int y, int z){
   final class FinalTest{	// 조상이 될 수 없는 클래스
     final int MAX_SIZE = 10;	// 값을 변경할 수 없는 멤버변수(상수)
     
-    final void getMaxSize(){	// 오버라이딩 할 수 없는 메서드(변경불가)
+    final int getMaxSize(){	// 오버라이딩 할 수 없는 메서드(변경불가)
       final int LV = MAX_SIZE;	// 값을 변경할 수 없는 지역변수(상수)
-      return MAX_SIZE;
+      return LV;
     }
   }
   ```
@@ -898,7 +898,12 @@ public ========================> protected ========================> (default) =
 
  
 
+- class 에만 붙일 수 있는 접근 제어자 => public, (default)
+- class 와 iv, cv 다 붙일 수 있는 접근 제어자 => public, protected, (default), private
 
+
+
+만약 이해가 잘 안간다면 ch7.pkg1, ch7.pkg2 의 주석처리를 풀었다 안 풀었다 반복하면서 깨닫길...
 
 ## 7-23 캡슐화 & 접근 제어자
 
@@ -1165,7 +1170,7 @@ public class TimeTest {
 
   ```java
   void doWork(Car c){	// 여기에는 new Car(), new FireEngine(), new Ambulance() 모두 다 들어올 수 있다. 왜? 다형성이 되기 때문이다.
-    if(c instanceof FireEngine){			// 1. 형변환이 가능한지 확인
+    if(c instanceof FireEngine){			// 1. 형변환이 가능한지 확인 (인자로 받은 c 가 FireEngine이 될 수 있는 얘냐라고 묻는 것)
       FireEngine fe = (FireEngine) c;	// 2. 형변환, 여기서 (FireEngine) c 를 하는 이유는 바로 밑줄에서 fe.water() 를 했기 때문이다. 만약 하지 않았다면 fe 에 Car 타입인 참조변수 c 리모콘이 할당되어 water() 를 사용할 수 없다!
       fe.water();
     }else if(c instanceof Ambulance){
@@ -1551,17 +1556,40 @@ public class Ex7_8 {
   ==> **추상화된 코드는 구체화된 코드보다 유연하다 라는 장점이 있음.** ==> 변경에 유리하다는 소리!
 
   ```java
-  GragorianCalendar cal = new GregorianCalendar();	// 구체적
-  Calendar cal = Calendar.getInstance();	// Calendar 의 자손객체를 반환. 
+  (1) GragorianCalendar cal = new GregorianCalendar();	// 구체적
+  (2) Calendar cal = Calendar.getInstance();	// Calendar 의 자손객체를 반환. 
+  
+  //Calendar.getInstance 함수 내에 return 하는 것을 보면 createCalendar(~) 로 되어 있고, 
+  //createCalendar를 보면 
+  private static Calendar createCalendar(TimeZone zone, Locale aLocale){
+    // ...
+    if (caltype != null){
+      switch(caltype){
+        case "buddhist":
+          cal = new BuddhistCalendar(zone, aLocale);	// Calender 의 자손
+          break;
+        case "japanese":
+          cal = new JapaneseImperialCalendar(zone, aLocale);	// Calender 의 자손
+          break;
+        case "gregory":
+          cal = new GregorianCalendar(zone, aLocale);	// Calender 의 자손
+          break;
+      }
+    }
+  }
   ```
-
-  이거 그레고리안 뭐 이런거 이해못해도, 유연함을 준다 라는 느낌을 가져가면 될 듯.
+  
+  (1) 의 경우 구체화된 코드라서, 그만큼 명확하다고 할 수 있다. 
+  
+  (2) 의 경우는 추상화된 코드라서, 불분명하다. 하지만 Calendar 라는 추상클래스를 사용해서, 어느 상황에서든 ( 자손들 중 아무거나) 코드가 틀리지 않게 된다. 
+  
+  
+  
+  이러한 장점을 말한 예시임.
   
   
 
 음... 이건 계속 다시 보자 완벽하게 이해는 못한 듯...?
-
-
 
 ## 7-35~37 인터페이스의 선언, 상속, 구현
 

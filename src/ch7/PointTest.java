@@ -19,8 +19,6 @@ class Point3D4 extends Point4{
 
     Point3D4(int x, int y, int z){
         super(1,2);
-        this.x = x;
-        this.y = y;
         this.z = z;
     }
 
