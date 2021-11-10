@@ -38,7 +38,7 @@ public class Ex7_10 {
         units[0] = new Marine();
         units[1] = new Dropship();
 
-
+        units[0].move(3,4);
     }
 }
 

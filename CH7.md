@@ -1596,9 +1596,9 @@ public class Ex7_8 {
 - **인터페이스(interface) 란? == 추상 메서드의 집합!** 이게 결론임 
 
   근데 이건 프로그래밍 관점에서 설명하는 거고, 일반적인 의미에서의 인터페이스 의미는 조금 이따가 알게 될 것. + 부수적인 것들(static 메서드, default 메서드, 상수) 근데 부수적인 것들은 진짜 부수적인 것들이니까 추상 메서드에 집중하자!
-
-
-
+  
+  
+  
 - **구현된 것이 전혀 없는 설계도. 껍데기 ( 모든 멤버가 public )** ==> 이게 핵심임!!!
 
   캡슐화.... 다시 한번 보자
@@ -1607,7 +1607,7 @@ public class Ex7_8 {
 
   A. 추상 클래스는 일반 클래스 이지만 추상 메서드를 가지고 있는 것임. 그 외에 생성자, iv 등등 있음
 
-  ​	반면 인터페이스는 완전히 아무것도 없는, 추상 메서드만 가지고 있는 것임. 인터페이스는 iv 나 생성자를 가질 수 없다.
+  ​	**반면 인터페이스는 완전히 아무것도 없는, 추상 메서드만** 가지고 있는 것임. 인터페이스는 iv 나 생성자를 가질 수 없다.
 
   ​	이게 핵심임.
 
@@ -1654,6 +1654,7 @@ public class Ex7_8 {
   interface Attackable{
     /** 지정된 대상(u) 를 공격하는 기능의 메서드 */
     void attack(Unit u);
+    void move(int x, int y);
   }
   ```
 
@@ -1806,18 +1807,19 @@ public class Ex7_8 {
     return new Fighter();
   }
   
-  Fightable f = method() // 이렇게 해야 한다.
+  Fightable f = method() // 이렇게 해야 한다. FightableTest.java 의 42번째 줄을 보면, f.getFightable() 의 리턴값은 (Fightable) f 이다. 그래서 보면
+  // Fightable f2 = f.getFightable() 로 해둠.
   ```
-
+  
   (말이 어렵네...)
   
   이건 실습 위주로 다시 한번 해보는 게 더 도움이 될 거다.
-
-
+  
+  
 
 # 7-39 인터페이스의 장점 (1)
 
-- **두 대상(객체) 간의 "연결", "대화", "소통" 을 돕는 "중간 역할"을 한다.**
+- **1. 두 대상(객체) 간의 "연결", "대화", "소통" 을 돕는 "중간 역할"을 한다.**
 
   interface = inter ( ~사이 ) + face ( 얼굴, 대상 )
 
@@ -1837,12 +1839,15 @@ public class Ex7_8 {
 
 ​	=> 하드웨어가 바뀌더라도 우리가 느끼기엔 차이가 없다. 뭐 하나 바뀌었다고 일일히 다 바뀐다? ㄹㅇ 개극혐임.
 
-​	
+​	**컴퓨터 본체가 바뀌었다 한들, 윈도우 화면이라는 interface 가 그대로면 사용자는 영향을 안 받음!!!**
 
-- 선언(설계) ( == 껍데기 ) 와 구현 ( == 알멩이 ) 을 분리시킬 수 있게 한다.
+​		
+
+- **2. 선언(설계) ( == 껍데기 ) 과 구현 ( == 알멩이 ) 을 분리시킬 수 있게 한다.**
 
   ```java
-  class B {
+  // 껍데기 + 알멩이
+  class B {	
     public void method(){
       System.out.println("method in B");
     }
@@ -1852,13 +1857,20 @@ public class Ex7_8 {
   위와 같은 클래스를 다음과 같이 분리가 가능하다
 
   ```java
+  // 껍데기 & 알멩이 분리
   interface I {
-    public void method();
+    public void method();	// 선언부(껍데기)만 떼어내기!
   }
   
   class B implements I {
-    public void method(){
+    public void method(){	// 알멩이
       System.out.println("method in B");
+    }
+  }
+  
+  class C implements I {
+    public void method(){
+      System.out.println("method in C");
     }
   }
   ```
@@ -1867,4 +1879,237 @@ public class Ex7_8 {
 
 - 인터페이스 덕분에 B가 변경되어도 A는 안 바꿀 수 있게 된다. (느슨한 결합  )
 
-  A 
+  만약 껍데기+알멩이 버전으로 되어 있으면, A 가 B 쓰다가 C 로 바꾸려면 A의 코드를 아얘 다 바꿔야 한다.
+  
+  하지만 껍데기 & 알멩이 분리 버전으로 되어 있으면, A 는 인터페이스 I 를 통해 B 를 사용하기 때문에 C 쓰려고 할때 A 에 변경을 가할 필요가 없다!
+  
+  ```java
+  class A {
+    public void methodA(B b){
+      b.methodB();
+    }
+  }
+  
+  //
+  class B{	// 이건 껍데기+알멩이 버전임. 그래서 이걸 분리하면 바로 아래 코드와 같다.
+  	public void methodB(){
+      System.out.println("methodB()");
+    }
+  }
+  //
+  interface I{
+    public void methodB();
+  }
+  
+  class B implements interfaceB{
+    public void methodB(){
+  		System.out.println("methodB()")
+    }
+  }
+  //
+  
+  class InterfaceTest{
+    public static void main(String[] args){
+      A a = new A();
+      a.methodA();
+    }
+  }
+  ```
+  
+  즉, A 와 B(껍데기 + 알멩이) 가 직접적으로 연결이 되어 있던 걸, A 와 I (껍데기) 의 연결로 만들어, 나중에 수정을 가해야 할때 A 에 영향이 안 가도록 한다가 포인트이다!
+  
+  
+
+# 7-39 인터페이스의 장점 (2)
+
+- **개발시간을 단축할 수 있다.**
+
+  ```java
+  A--------------->I---------------->B
+    		사용								구현
+  ```
+
+  이렇게 하면 A 는 B 클래스가 다 완성이 안 되어도, 인터페이스를 보고 사용하는 코드만 짜면 됨 ==> 시간 단축
+
+  
+
+- **변경에 유리한 유연한 설계가 가능하다**
+
+  I (껍데기) + B(알멩이) 구조로 만들어, 나중에 구현 파트에서 변경점이 생기게 되면  A (사용자) 에 변화를 안 줘도 되고 알멩이 파트만 갈아끼면 됨!
+
+- **표준화가 가능하다**
+
+  Java Application 과 기존의 데이터베이스( MySQL, Oracle ) 사이에 JDBC 라는 인터페이스 집합을 넣어, 표준화를 구현함.
+
+- **서로 관계 없는 클래스들을 관계를 맺어줄 수 있다!**
+
+  <img src="/Users/xpmxf4/Desktop/스크린샷 2021-11-06 오후 4.42.49.png" alt="스크린샷 2021-11-06 오후 4.42.49" style="zoom:50%;" />
+
+
+
+# 7-40 디폴트 메서드와 static 메서드
+
+- 인터페이스에 디폴트 메서드, static 메서드 추가 기능. (JDK 1.8부터)
+
+  원래는 추상 메서드만 가능하다고 우린 배웠었다!
+
+- 인터페이스에 새로운 메서드(추상 메서드)를 추가하기 어려움
+
+  예를 들면 
+
+  1. 복잡한 상속계층도를 가진 코드가 있다고 해보자.
+
+  2. 그리고 이러한 상속계층도에서 몇개몇개가 같은 인터페이스를 구현했다고 해보자.
+
+  3. 이랬을 때, 이 인터페이스에 추상 메서드를 하나 추가시키게 되면, 이 인터페이스를 구현한 모든 클래스는
+     새롭게  추가된 추상 메서드를 일일히 다 구현을 해야 한다. 이게 ㄹㅇ 번거롭다.
+
+  4. ```java
+     interface MyInterface{
+       void method();
+       void newMethod();
+     }
+     ```
+
+     를 밑에처럼 바꿔버림
+
+     ```java
+     interface MyInterface{
+       void method();
+       default void newMethod(){}; // 인터페이스 원칙 위반임!! 몸통이 존재하니까!! 여기서는 default 꼭 붙여야 한다!!
+     }
+     ```
+
+     근데 인터페이스가 다중 상속이 가능했던 이유는, 추상메서드의 집합 즉 구현부가 없으니까 이름이 겹쳐도 상관이 없는 데, 이제는 충돌 문제가 생긴다.
+
+  5. 디폴트 메서드가 기존의 메서드와 충돌할 때의 해결책
+
+     1. 여러 인터페이스의 디폴트 메서드 간의 충돌
+        - 인터페이스를 구현한 클래스에서 디폴트 메서드를 오버라이딩 해야 한다.
+     2. 디폴트 메서드와 조상 클래스의 메서드 간의 충돌
+        - 조상 클래스의 메서드가 상속되고, 디폴트 메서드는 무시된다.
+
+  6. 근데 사실 5번 같은 규칙 잘 모르겠으면 우리가 직접 오버라이딩 하면 해결 끝이다!!
+
+
+
+
+
+여기까지 객체지향!
+
+----------
+
+
+
+# 7-42 내부 클래스(inner class)
+
+- 클래스 안의 클래스
+
+  ```java
+  class Outer {		// 외부 클래스
+    class Inner{	// 내부 클래스
+    }
+  }
+  ```
+
+- 내부 클래스의 장점
+
+  : 내부 클래스에서 외부 클래스의 멤버들을 쉽게 접근할 수 있다!
+
+  => 클래스B가 클래스A의 멤버에 접근하려면 객체를 선언해서 사용해야 한다. 하지만 위처럼 내부 클래스로 선언하면 자유롭게 A의 멤버에 접근 가능. B는 A의 멤버이다.
+
+  : 코드의 복잡성을 줄일 수 있다. (캡슐화) => A 클래스 안에서만 쓸 클래스면, 안에서 선언하고 안에서만 씀!
+
+- 내부 클래스의 종류와 유효범위(scope) 는 변수와 동일
+
+  ```java
+  class Outer{
+    int iv = 0;
+    static int cv = 0;
+    
+    void myMethod(){
+      int lv=0;
+    }
+  }
+  
+  class outer{
+    class InstanceInner{}				// iv 랑 특징 같음, 인스턴스 클래스
+    static class StaticInner{}	// cv 랑 특징 같음, 스태틱 클래스
+    
+    void myMethod(){
+      class LocalInner{};				// lv 랑 특징 같음, 지역 클래스
+    }
+  }
+  
+  이거 말고 "익명 클래스" 라고 있는 데, 이건 이벤트 처리기등 일시적으로만 쓸 애들에 사용하는 데 거의 안씀.
+  ```
+
+
+
+# 7-45~50 내부 클래스의 제어자와 접근성
+
+```java
+class outer{														// 원래 클래스에는 (default), public 만 가능했었다.
+  private int iv = 0;
+  protected static int cv = 0;
+  
+  void myMethod(){
+    int lv = 0;
+  }
+}
+
+class Outer{
+  private class InstanceInner{}					// 여기 내부클래스에는 
+  protected static class StaticInner{}	// private,(default),protected,public 다 가능하다!
+  
+  void myMethod(){
+    class LocalInner{}
+  }
+}
+```
+
+
+
+```java
+public class Ex7_12 {
+    class InstanceInner{
+        int iv = 100;
+        //        static int cv = 100;
+        final static int CONST = 100;   // 상수인 경우 static 이 가능하다.
+    }
+
+    static class StaticInner{ // 내부 클래스 안에 static 멤버가 필요하면,
+        // static 내부 클래스를 사용해야 한다!
+        // 사실 static 멤버면 객체 생성 없이 사용할 수 있어야 한다.
+        // 근데 instance 내부 클래스 안에 static 멤버가 있으면, 클래스가
+        // static 이 아니라 사용하지 못한다는 모순이 생김.
+        // 따라서 이렇게 이러한 규칙이 존재하는 거
+        int iv = 100;
+        static int cv = 100;
+        // static 내부 클래스에서는 외부 클래스의 인스턴스
+        // 멤버에 접근할 수 없다.
+    }
+
+    void meMethod(){
+        class LocalInner{
+            int iv = 300;
+            final static int CONST = 300;    // 보통 상수에 final static 둘이 같이 붙인다.
+            // 근데 항상 그러지는 않음!! 밑 Card 확인
+            // 근데 사실 Card 가 좀 예외기는 함
+            // 그때그때 마다 경우 따라서 제어자 잘 붙이기!
+        }
+    }
+
+    public static void main(String[] args) {
+        System.out.println();
+        System.out.println();
+    }
+}
+class Card{
+
+    final String  kind="heart";
+    final int number = 3;
+}
+
+```
+

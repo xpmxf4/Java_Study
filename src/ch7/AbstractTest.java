@@ -5,7 +5,7 @@ public class AbstractTest {
         character[] group = new character[3];
         group[0] = new Marine2();
         group[1] = new Tank();
-        group[2] = new Dropship();
+        group[2] = new Dropship2();
 
     }
 }
@@ -33,7 +33,7 @@ class Tank extends character {
     void siegeMode(){}
 }
 
-class Dropship extends character {
+class Dropship2 extends character {
     void move(int x, int y) {
 
     }
