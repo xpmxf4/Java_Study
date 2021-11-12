@@ -1,3 +1,5 @@
+
+
 # CH7 
 
 
@@ -2049,7 +2051,7 @@ public class Ex7_8 {
 # 7-45~50 내부 클래스의 제어자와 접근성
 
 ```java
-class outer{														// 원래 클래스에는 (default), public 만 가능했었다.
+class outer{														// 원래 클래스에는 (default) 아니면 public 만 가능했었다.
   private int iv = 0;
   protected static int cv = 0;
   
@@ -2063,12 +2065,12 @@ class Outer{
   protected static class StaticInner{}	// private,(default),protected,public 다 가능하다!
   
   void myMethod(){
-    class LocalInner{}
+    class LocalInner{} 
   }
 }
 ```
 
-
+내부 클래스는 iv, cv, lv 랑 다를 거 없다! 어렵게 생각하지 말자!
 
 ```java
 public class Ex7_12 {
@@ -2101,15 +2103,213 @@ public class Ex7_12 {
     }
 
     public static void main(String[] args) {
-        System.out.println();
-        System.out.println();
+        System.out.println(InstanceInner.CONST);
+        System.out.println(StaticInner.cv);
     }
 }
-class Card{
 
+class Card{
     final String  kind="heart";
     final int number = 3;
+ 		final static int number = 52;	// 총 카드의 수, 이건 항상 안 변하니까!
 }
 
 ```
+
+
+
+```java
+// iv 가 cv 쓰는 건 ㄱㅊ
+// cv 가 iv 쓰는 건 ㄱㅊ
+class Ex7_13{
+  class InstanceInner{}
+  static class StaticInner{}
+  
+  InstanceInner iv = new InstanceInner(); // 가능
+  StaticInner cv = new StaticInner();	// 가능
+  //						 = new InstanceInner(); 이건 안됨. 왜냐하면 Static 멤버로 Instance 객체 가리키려 하니
+  
+  static void staticMethod(){
+    StaticInner obj2 = new StaticInner(); // 가능
+    InstanceInner obj1 = new InstanceInner(); // 불가능. static 멤버 안에서는 외부 클래스의 instance member 사용할 수 없으니까! 접근할 수 없으니까!
+    
+  	// 굳~~~~~~이 InstanceInner 클래스를 사용하고 싶으면 다음과 같이 하면 된다.
+    Ex7_13 outer = new Ex7_13();
+		InstanceInner obj1 = outer.new InstanceInner();
+  }
+  
+  void instanceMethod(){
+    StaticInner obj2 = new StaticInner();
+    InstanceInner obj1 = new InstanceInner();
+  }
+  
+  void myMethod(){
+		class LocalInner{}
+    LocalInner lv = new LocalInner();
+  }
+}
+```
+
+iv, cv 랑 똑같다는 게 포인트!!
+
+
+
+```java
+// 예제 7-14
+내부 클래스는 외부 클래스의 private 멤버에 접근 가능하다.
+지역 내부 클래스 에서는 final 이 붙은 변수, 즉 상수만 접근 가능하다!
+근데 jdk1.8 부턴 에러가 아님!
+class Outer{
+  private int outerIv = 0;
+  static int outerCv = 0; // 이거 private 이여도 StaticInner 에서 조회 가능!
+  
+  class InstanceInner{
+    int iiv = outerIv;
+    int iiv2 = outerCv;
+  }
+  
+  static class StaticInner{
+//  int siv = outerIv; 불가능!  
+    static int scv = outerCv;
+  }
+  
+  void myMethod(){
+    int lv = 0;				// 지역 변수
+    final int LV = 0;	// 상수
+    
+    class LocalInner{
+      int liv = outerIv;
+      int liv2 = outerCv;
+      int liv3 = lv; // 원래 이건 오류임. 왜냐하면 내부 클래스의 객체가 meMethod() 보다 오래 살아남음. 그러면 내부 클래스의 객체는 살아있는 데, myMethod() 는 죽어서 lv 를 조회할 수가 없음. 근데 jdk 1.8 부턴 가능하다! jdk1.8은 final 선언안해도, 안 변하는 값들을 상수 취급 하기 때문에 lv 인거임.
+      int liv4 = LV;	// 얘는 상수라서 가능함!
+    }
+  }
+}
+```
+
+1. 내부 클래스는 외부 클래스의 private 멤버에 접근 가능하다.
+2. 지역 내부 클래스에서는 외부 메서드의 iv 중 상수만 접근 가능함.
+
+2-1. jdk1.8부터 오류는 아니다. 왜냐하면 jdk1.8은 final 없이 바뀌지 않는 값도  상수로 취급함. 그래서 갓궁성이 얘기한 건, 그냥 외부 메서드에 다 final 붙이라고 하심.
+
+
+
+```java
+class Ex7_15{
+  public static void main(String[] args){
+    Outer2 oc = new Outer2();
+    Outer2.InstanceInner ii = oc.new InstanceInner();		// 이거 생긴 건 그냥 받아들이자. 문법임.
+    
+    System.out.println(ii.iv);
+    System.out.println(Outer2.StaticInner.cv);
+    
+    Outer2.StaticInner si = new Outer2.StaticInner();
+    System.out.println(si.iv)
+  }
+}
+
+class Outer2{
+  class InstanceInner{
+    int iv = 100;
+  }
+  static class StaticInner{
+		int iv = 200;
+    static int cv = 300;
+  }
+  void myMethod(){
+    class LocalInner{
+      int iv = 400;
+    }
+  }
+}
+```
+
+1. 내부 클래스의 참조변수 만들기
+
+
+
+```java
+class Outer3{
+  int value = 10;
+  
+  class Inner{
+    int value = 20;
+    
+    void method1(){
+      int value = 30;
+      System.out.println(value);							//30
+      System.out.println(this.value);					//20
+      System.out.println(Outer3.this.value);	//10, 이 지랄 하는 거 드물긴 한데 참조는 할 수 있다 정도로만 말자.
+    }
+  }
+}
+```
+
+
+
+# 7-51 익명 클래스(anonymous class)
+
+- 이름이 없는 일회용 클래스. 정의와 생성을 동시에 함!
+
+  ```java
+  // 문법
+  new 조상클래스이름(){
+    //클래스 내용, 멤버 선언
+  }
+  
+  			또는
+  new 구현인터페이스이름(){
+   	//클래스 내용, 멤버 선언
+  }
+  ```
+
+
+
+```java
+//예제
+class Ex7_17{
+  Object iv = new Object(){ void method(){} };
+  static Obejct cv = new Object(){ void method(){} };
+  
+  void myMethod(){
+    Object lv = new Object(){ void method(){} };
+  }
+}
+```
+
+
+
+```java
+//AWT (Java 의 윈도우 프로그래밍 도구)
+import java.awt.*;
+import java.awt.event.*;
+
+class Ex7_18{
+  public static void main(String[] args){
+    Button b = new Button("Start");
+    b.addActionListener(new EventHandler());
+  }
+}
+
+class EventHandler implements ActionListener{ // 근데 이거 일회성인데 클래스 선언해주는건 낭비다. 
+  public void actionPerformed(ActionEvent e){
+    System.out.println("ActionEvent occurred!!");
+  }
+}
+
+//그래서 이렇게 함
+
+class Ex7_18{
+  public static void main(String[] args){
+    Button b = new Button("Start");
+    b.addActionListener(new ActionListener(){	// 클래스의 정의와 객체 생성을 동시에 진행함!
+      public void actionPerformed(ActionEvent e){
+    		System.out.println("ActionEvent occurred!!");
+  		}
+    })
+  }
+}
+```
+
+
 
