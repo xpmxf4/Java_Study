@@ -803,7 +803,7 @@ Point3D(int x, int y, int z){
   |   대상   |                             의미                             |
   | :------: | :----------------------------------------------------------: |
   | 멤버변수 | - 모든 인스턴스에 공통적으로 사용되는 클래스 변수가 된다.<br />- 클래스 변수는 인스턴스를 생성하지 않고도 사용 가능하다. <br />- 클래스가 메모리에 로드될 때 생성된다. |
-  |  메서드  | - 인스턴스를 생성하지 않고도 호출이 가능한 static 메서드가 된다.<br /><br />-static 메서드 내에서는 인스턴스 멤버들을 직접 사용할 수 없다. |
+  |  메서드  | - 인스턴스를 생성하지 않고도 호출이 가능한 static 메서드가 된다.<br />-static 메서드 내에서는 인스턴스 멤버들을 직접 사용할 수 없다. |
 
   ```java
   class StaticTest{
@@ -1196,7 +1196,7 @@ public class TimeTest {
   FireEngine
   
   FireEngine fe = new FireEngine();
-  System.out.println(fe instanceof Object);	// true
+  System.out.println(fe instanceof Object);	// true, "Object 타입의 참조변수로 객체사용이 가능하냐?" 라고 이해하자.
   System.out.println(fe instanceof Car);	// true
   System.out.println(fe instanceof FireEngine);	// true
   
@@ -1458,7 +1458,7 @@ public class Ex7_8 {
   ## 7-34 추상클래스의 작성
 
   1. 미완성 설계도임. 미완성 클래스는 미완성 메서드, 즉 **몸통이 없는 메서드를 가지고 있는 클래스.**
-  2. 목적은 다른 클래스 작성에 도움을 주기 위한 것임. 미완성 클래스로는 인스턴스 생성 불가능.
+  2. **목적**은 다른 클래스 작성에 도움을 주기 위한 것임. 미완성 클래스로는 인스턴스 생성 불가능.
   3. 상속을 통해 **모든** **추상 메서드**를 완성해야만 인스턴스 생성 가능.
 
   
@@ -1504,12 +1504,12 @@ public class Ex7_8 {
     }
     
     class Tank extends Unit {
-      void move(int x, int y){ /*지정된 위치로 이동*/}
+      void move(int x, int y){ /*지상 유닛 무빙*/}
       void changeMode() {/* 공격모드로 전환 */ }
     }
     
     class Dropship extends Unit {
-      void move(int x, int y){ }
+      void move(int x, int y){/*공중 유닛 무빙*/}
       void load()	{/*선택된 대상을 태운다 */}
       void unload() {/*선택된 대상을 내린다 */}
     }
