@@ -8,26 +8,21 @@ public class Notepad {
     }
 }
 
-class Machine{
-    String color;
-    String geartype;
-    int door;
+class Point{
+    int x,y;
 
-    Machine(){
-        this("blue", "gear", 3);
+    Point(int x, int y){
+        this.x = x;
+        this.y = y;
     }
+}
 
-    Machine(String c, String g, int d){
-        color = c;
-        geartype = g;
-        door = d;
-    }
+class Point3D extends Point{
+    int z;
 
-    Machine(String c, int d){
-        this(c, "gear", d);
-    }
-
-    void run(){
-        System.out.println(this.color+ this.geartype+ "run");
+    Point3D(int x, int y, int z){
+//        System.out.println("asdf");
+        super(x, y);
+        this.z = z;
     }
 }
