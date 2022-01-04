@@ -35,11 +35,11 @@ class Fighter extends Unit implements Fightable {
 public class FighterTest {
     public static void main(String[] args) {
 //        Fighter f1 = new Fighter();
-        Unit u = new Fighter();
-        Fightable f1 = new Fighter();
-        Fighter f = new Fighter();
+        Unit u = new Fighter();         //Unit 클래스 + Fightable 인터페이스
+        Fightable f1 = new Fighter();   //Fightable 인터페이스 참조 변수=f1 에 (Unit 클래스 + Fightable 인터페이스) 받음
+        Fighter f = new Fighter();      //Fighter 클래스 참조 변수=f 에 (Unit 클래스 + Fightable 인터페이스) 받음
 
-        Fightable f2 = f.getFightable();
+        Fightable f2 = f.getFightable();    //약간 상대방용 허수아비 하나 랜덤 생성하는 느낌임
 //        f2.stop();  // 위에서 return 타입이 Fightable 이라, f2.stop() 이 되지 않는다!
                     // 리턴 타입이 인터페이스다? 그 리턴 타입은 인터페이스를 구현한 객체를 리턴한다라는 뜻.
                     // 왜 리턴 타입을 인터페이스로? 추상화를 위해서! ==> 애매하게 해서 유연함 올리려고!

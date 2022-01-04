@@ -3,26 +3,24 @@ package ch6;
 
 // 10
 public class Notepad {
-    public static void main(String[] args) {
+    static int[] shuffle(int[] arr) {
+        if(arr == null || arr.length==0) return arr;
 
+        for (int i = 0; i < arr.length; i++) {
+            int tmp = arr[i];
+            int ranIdx = (int)(Math.random() * arr.length);
+            arr[i] = arr[ranIdx];
+            arr[ranIdx] = tmp;
+        }
+        return arr;
     }
-}
 
-class Point{
-    int x,y;
-
-    Point(int x, int y){
-        this.x = x;
-        this.y = y;
+    public static void main(String[] args)
+    {
+        int[] original = {1,2,3,4,5,6,7,8,9};
+        System.out.println(java.util.Arrays.toString(original));
+        int[] result = shuffle(original);
+        System.out.println(java.util.Arrays.toString(result));
     }
-}
 
-class Point3D extends Point{
-    int z;
-
-    Point3D(int x, int y, int z){
-//        System.out.println("asdf");
-        super(x, y);
-        this.z = z;
-    }
 }

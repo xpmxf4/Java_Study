@@ -1,6 +1,6 @@
 package ch6;
 
-public class Exercise6_2 {
+public class Exercise6_2$$ {
     public static void main(String[] args) {
         StudaCard card1 = new StudaCard(3, false);
         StudaCard card2 = new StudaCard();
@@ -16,6 +16,7 @@ class StudaCard {
 
     StudaCard() {
 //        this.num = 1000; 이렇게 되도 밑에 생성자를 this()로 호출할 수 있음.
+//        그리고 해설에 이게 더 좋은 코드라고 나와 있음
         this(1, true);
     }
 

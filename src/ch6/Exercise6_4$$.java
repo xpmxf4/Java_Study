@@ -1,6 +1,6 @@
 package ch6;
 
-public class Exercise6_4 {
+public class Exercise6_4$$ {
     public static void main(String[] args) {
         Student s = new Student("홍길동", 1, 1, 100, 60, 76);
 
@@ -36,11 +36,12 @@ class Student {
         int total = getTotal();
 
 //        return ((int) ((float) total / 3 * 10 + 0.5F)) / 10f;
-        return (float)total / 
+        return (int) (total / 3f * 10 + 0.5) / 10f;
     }
 
-    String info(){
-        return this.name +','+ this.ban+','+this.no+','+this.kor+','+this.eng+','+this.math;
+    String info() {
+//        return this.name +','+ this.ban+','+this.no+','+this.kor+','+this.eng+','+this.math;
+        return name + ',' + ban + ',' + no + ',' + kor + ',' + eng + ',' + math + getTotal() + getAverage();
     }
 
 }
