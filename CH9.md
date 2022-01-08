@@ -276,4 +276,76 @@ Object 클래스란?
   char c = '';	// 공백으로 초기화
   ```
 
+  ```java
+  String str1 = ""; // 이렇게 선언해야 좋은 코드임
   
+  String str2 = new String("");	// 이건 구데기다!
+  ```
+
+# 9-11 String 클래스의 생성자와 메서드
+
+|          생성자          | 예제                                                         | 결과        |
+| :----------------------: | ------------------------------------------------------------ | ----------- |
+|     String(String s)     | String s = new String("Hello");                              | s = "Hello" |
+|   String(char[] value)   | char[] c = {'h','e','l','l','o'};<br /><br />String s = new String(c); | c = "hello" |
+| String(StringBuffer buf) | StringBuffer sb = new StringBuffer("hello");<br />String s = new String(sb); | s = "hello" |
+
+|                            메서드                            |                             예제                             |              결과               |
+| :----------------------------------------------------------: | :----------------------------------------------------------: | :-----------------------------: |
+|                    char chatAt(int index)                    |       String s = "Hello";<br /> char c = s.charAt(1);        |            c = 'e';             |
+|                   int compareTo(String s)                    | int i1 = "aaa".compareTo("bbb");<br />int i2 = "aaa".compareTo("aaa");<br />int i3 = "bbb".compareTo("aaa"); | i1 = -1<br />i2 = 0<br />i3 = 1 |
+|                  String concat(String str)                   |        String s1 = "Hello";<br />s1.concat(" World");        |       s1 = "Hello World"        |
+| boolean contains(CharSequence s)<br />/ CharSequence interface 를 구현한 모든 클래스들의 인스턴스가 인자로 들어올 수 있다! (다형성!) |   String s = "abcdefg";<br />boolean b= s.contains("bc");    |             b=true              |
+|                  booelan endswith(String s)                  | String s = "Hello.txt";<br />boolean b = s.endswith("txt");  |            b = true;            |
+|                 boolean equals(Object obj);                  | String s = "Hello";<br />boolean b = s.equals("Hello");<br />boolean b2 = s.equals("hello"); |   b = true;<br />b2 = false;    |
+|             boolean equalsIgnoreCase(String str)             | String s = "Hello";<br />boolean b = s.equalsIgnoreCase("heLLo"); |            b = true;            |
+| int indexOf(int ch)<br />/매개변수가 int 지만 신경쓰지 말자! | String s = "Hello";<br />boolean b1 = s.indexOf('e');<br />boolean b2 = s.indexOf('c'); |       b1 = 1<br />b2 = -1       |
+
+
+
+|                                                              |                             예제                             |                             결과                             |
+| :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: |
+|                 int indexOf(int ch, int pos)                 | String s = "hello";<br />int i1 = s.indexOf(e,0);<br />int i2 = s.indexOf(e,2) |                     i1 = 1<br />i2 = -1                      |
+|                   int indexOf(String str)                    |    String s = "ABCDEFG";<br />int idx = s.indexOf("CD");     |                           idx = 2                            |
+|                   int lastIndexOf(int ch)                    | String s = "java.lang.Object";<br />int idx1 = s.lastIndexOf('.');<br />int idx2 = s.indexOf('.') |                    idx1 = 9<br />idx2 = 4                    |
+|                         int length()                         |      String s = "Hello";<br />int length = s.length();       |                          length = 5                          |
+|                 String[] split(String regex)                 | String s = "dog,cat,bear";<br />String[] arr = animals.split(","); |      arr[0]="dog"<br />arr[1]="cat"<br />arr[2]="bear"       |
+|           String[] split(String regex, int limit)            | String s = "dog,cat,bear";<br />String[] arr = s.split(",", 2); |             arr[0] = dog<br />arr[1]="cat,bear"              |
+| String substring(int begin)<br />String substring(int begin, int end) / begin<= x < end | String s = "java.lang.Object";<br />String c = s.substring(10);<br />String p = s.substring(5, 9); |                  c = "Object"<br />p="lang"                  |
+|                     String toLowerCase()                     |    String s = "Hello";<br />String s1 = s.toLowerCase();     |                          s1="hello"                          |
+|                     String toUpperCase()                     |     String s ="Hello";<br />String s1 = s.toUpperCase();     |                          s1="HELLO"                          |
+|                        String trim();                        |  String s = "   Hello World   ";<br />String s1 = s.trim();  |                      s1 = "Hello World"                      |
+| static String valueOf(boolean b)<br />static String valueOf(char c)<br />static String valueOf(int i)<br />static String valueOf(long l)<br />static String valueOf(float f)<br />static String valueOf(double d)<br />static String valueOf(Object o) | String b = String.valueOf(true);<br />String c = String.valueOf('a');<br />String i = String.valueOf(100);<br />String l = String.valueOf(100L);<br />String f = String.valueOf(10F);<br />String d = String.valueOf(10.0);<br />java.util.Date dd = String.valueOf(new java.util.Date()); | b = "true"<br />c = "a"<br />i = "100"<br />l = "100"<br />f = "10"<br />d = "10.0"<br />dd = "Wed Jan 27 21:26 29 KST 2021" |
+
+진짜 개많네
+
+# 9-12 join() 과 StringJoiner
+
+- join( ) 은 여러 문자열 사이에 구분자를 넣어서 결합한다. / join 은 static 메서드이기 때문에 클래스에서 바로 호출함!
+
+  ```java
+  String animals = "dog,cat,bear";
+  String[] arr = animals.split(",");
+  String str = String.join("-", arr);
+  String str = String.join("-", "dog", "cat", "bear");
+  String str = String.join("-", new String[]{"dog","cat","bear"});
+  System.out.println(str);	// dog-cat-bear
+  ```
+
+- 숫자를 문자열로 바꾸는 방법
+
+  ```java
+  int i = 100;
+  String str1 = i + "";							// "100", 이게 더 편하다
+  String str2 = String.valueOf(i);	// "100", 이게 더 성능 굿
+  ```
+
+- 문자열을 숫자로 바꾸는 방법
+
+  ```java
+  int i = Integer.parseInt("100");		// 100, 이건 좀 올드한 방법
+  int i2 = Integer.valueOf("100");		// 100, 이건 좀 새로운 방법. 근데 이게 래퍼클래스마다 다 같으니까, 이걸로 외우자! 근데 사실 valueOf 의 반환타입은 Integer, 즉 객체이다. 하지만 반환타입을 int 라고 적어도 된다!
+  Integer i2 = Integer.valueOf("100");// 100
+  ```
+
+- `숫자 -> 문자열` 이나, `문자열 -> 숫자` 둘 다 valueOf 로 통일된다!
