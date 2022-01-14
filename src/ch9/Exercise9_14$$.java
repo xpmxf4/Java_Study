@@ -1,6 +1,7 @@
 package ch9;
 
 import java.util.*;
+import java.util.regex.Pattern;
 
 public class Exercise9_14$$ {
     public static void main(String[] args) {
@@ -24,6 +25,9 @@ public class Exercise9_14$$ {
                 System.exit(0);
             }
 
+            for(int i = 0 ; i < phoneNumArr.length; i++){
+//                phoneNumArr[i].
+            }
 
 
             if(list.size()>0) {

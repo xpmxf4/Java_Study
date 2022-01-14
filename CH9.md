@@ -292,7 +292,7 @@ Object 클래스란?
 
 |                            메서드                            |                             예제                             |              결과               |
 | :----------------------------------------------------------: | :----------------------------------------------------------: | :-----------------------------: |
-|                    char chatAt(int index)                    |       String s = "Hello";<br /> char c = s.charAt(1);        |            c = 'e';             |
+|                    char charAt(int index)                    |       String s = "Hello";<br /> char c = s.charAt(1);        |            c = 'e';             |
 |                   int compareTo(String s)                    | int i1 = "aaa".compareTo("bbb");<br />int i2 = "aaa".compareTo("aaa");<br />int i3 = "bbb".compareTo("aaa"); | i1 = -1<br />i2 = 0<br />i3 = 1 |
 |                  String concat(String str)                   |        String s1 = "Hello";<br />s1.concat(" World");        |       s1 = "Hello World"        |
 | boolean contains(CharSequence s)<br />/ CharSequence interface 를 구현한 모든 클래스들의 인스턴스가 인자로 들어올 수 있다! (다형성!) |   String s = "abcdefg";<br />boolean b= s.contains("bc");    |             b=true              |
