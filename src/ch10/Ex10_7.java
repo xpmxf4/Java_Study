@@ -7,6 +7,8 @@ public class Ex10_7 {
         DecimalFormat df = new DecimalFormat("#,###.##");
         DecimalFormat df2 = new DecimalFormat("#.###E0");
 
+
+
         try{
             System.out.println(Double.parseDouble("1<<<234567.89"));
             Number num = df.parse("1,234,567.89");  // 형식 문자열 -> 숫자
