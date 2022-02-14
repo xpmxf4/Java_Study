@@ -36,7 +36,6 @@ class ThreadEx11_2 extends Thread {
         int x=0;
         while (it.hasNext()) {
             Thread t = it.next();
-            StackTraceElement[] ste =
         }
     }
 }
