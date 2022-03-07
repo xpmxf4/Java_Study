@@ -1,4 +1,4 @@
-package ch14Mac;
+package ch14;
 
 import java.util.Arrays;
 import java.util.stream.Stream;
@@ -10,8 +10,9 @@ public class Ex14_7 {
                 new String[]{"ABC", "GHI", "JKL"}
         );
 
-        Stream<String> strStrm = strArrStrm.flatMap(Arrays::stream);
-        strStrm
+
+        Stream<String> newStream = strArrStrm.flatMap(Arrays::stream);
+        newStream
                 .map(String::toLowerCase)
                 .distinct()
                 .sorted()
@@ -19,12 +20,12 @@ public class Ex14_7 {
         System.out.println();
 
         String[] lineArr = {
-                "believe or not It is true",
+                "Believe or not It is true",
                 "Do or do not There is no try"
         };
-
         Stream<String> lineStream = Arrays.stream(lineArr);
-        lineStream.flatMap(line -> Stream.of(line.split(" +")))
+        lineStream
+                .flatMap(line -> Stream.of(line.split(" +")))
                 .map(String::toLowerCase)
                 .distinct()
                 .sorted()
