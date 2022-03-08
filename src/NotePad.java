@@ -1,38 +1,14 @@
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class NotePad {
     public static void main(String[] args) {
-        Box<?> b = new Box<Apple>();
+        List<String> list = Arrays.asList("abc", "aaa", "bbb", "ddd", "aaa");
 
+        Collections.sort(list, (s1, s2) -> s2.compareTo(s1));
 
-    }
-
-    public static ArrayList<? extends Fruit> merge(ArrayList<? extends Fruit> list1, ArrayList<? extends Fruit> list2){
-        ArrayList<? extends Fruit> newList = new ArrayList<>(list1);
-
-        return newList;
+        System.out.println(list);
     }
 }
 
-
-class Fruit {
-};
-
-class Apple extends Fruit {
-}
-
-class Grape extends Fruit {
-}
-
-
-class Box<T> {
-    T item;
-
-    T getItem() {
-        return item;
-    }
-
-    void setItem(T item) {
-        this.item = item;
-    }
-};
