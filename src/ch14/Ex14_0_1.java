@@ -4,7 +4,7 @@ import java.util.function.*;
 
 public class Ex14_0_1 {
     public static void main(String[] args) {
-        Function<Integer,MyClass> s = MyClass::new;
+        Function<Integer, MyClass> s = MyClass::new;
 
         System.out.println(s.apply(2));
 
@@ -15,10 +15,10 @@ public class Ex14_0_1 {
     }
 }
 
-class MyClass{
+class MyClass {
     int iv;
 
-    MyClass(int iv){
+    MyClass(int iv) {
         this.iv = iv;
     }
 }

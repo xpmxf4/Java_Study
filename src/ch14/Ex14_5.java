@@ -1,4 +1,4 @@
-package ch14Mac;
+package ch14;
 
 import java.util.Comparator;
 import java.util.stream.Stream;
