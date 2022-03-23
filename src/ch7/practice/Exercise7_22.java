@@ -11,7 +11,7 @@ abstract class Shape {
         this.p = p;
     }
 
-    abstract double caclArea();
+    abstract double calcArea();
 
     Point getPosition() {
         return p;
@@ -43,33 +43,43 @@ class Point {
 class Circle extends Shape {
     double r;
 
-    Circle(Point p, double r){
-        super(p);
+    Circle(double r){
+        super();
         this.r = r;
     }
-
-    @Override
-    double caclArea() {
-        return Math.PI * r * r;
+    double calcArea(){
+       return Math.PI * r * r;
     }
 }
 
-class Rectangle extends Shape{
+class Rectangle extends Shape {
     double width;
     double height;
+
+    Rectangle(double width,double height){
+        super();
+        this.width = width;
+        this.height = height;
+    }
+    double calcArea(){
+        return width * height;
+    }
 
     boolean isSquare(){
         return width==height;
     }
-
-    @Override
-    double caclArea(){
-        return width * height;
-    }
 }
 
 public class Exercise7_22 {
+    static double sumArea(Shape[] arr){
+        double sum = 0;
+        for(Shape s: arr){
+           sum += s.calcArea();
+        }
+        return sum;
+    }
     public static void main(String[] args) {
-        Shape[] arr = {new Circle(5.0), }
+        Shape[] arr = {new Circle(5.0), new Rectangle(3, 4), new Circle(1)};
+        System.out.println("면적의 합 : " + sumArea(arr));
     }
 }
